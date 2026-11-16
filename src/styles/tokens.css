@@ -100,7 +100,6 @@
   --note-lime: var(--lime-400);
   --note-blue: var(--azure-200);
   --note-pink: var(--raspberry-200);
-  --color-endpaper-wash: color-mix(in oklab, var(--color-page) 72%, transparent); /* pales the tile pattern inside the covers */
   /* Each chapter's pages (and their tab) are paper tinted with the chapter's colour. */
   --color-page-lime: color-mix(in oklab, var(--color-page) 78%, var(--note-lime));
   --color-page-blue: color-mix(in oklab, var(--color-page) 72%, var(--note-blue));

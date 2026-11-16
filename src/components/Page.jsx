@@ -69,9 +69,6 @@ const layouts = {
     </>
   ),
 
-  // The blank paper glued inside a cover.
-  endpaper: () => null,
-
   back: ({ line }) => (
     <div className="cover-label">
       <p className="cover-label__line">{line}</p>
@@ -196,7 +193,7 @@ const layouts = {
 // Inactive pages are inert so hidden links cannot receive keyboard focus.
 const Page = memo(function Page({ page, inert }) {
   const Layout = layouts[page.type]
-  const side = page.folio % 2 ? 'right' : 'left'
+  const side = page.folio % 2 ? 'left' : 'right'
   return (
     <article
       className={`page page--${page.type}`}

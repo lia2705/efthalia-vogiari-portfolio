@@ -17,7 +17,7 @@ One owner per responsibility. Data flows one way: content, then layout, then rea
 | Owner | Responsibility |
 |---|---|
 | `src/content/` | Text, images and chapter definitions. Data only; it imports nothing. Copy rules are at the top of `book.js`. |
-| `src/book/layout.js` | Binds the content into numbered pages like a real book: cover, endpaper, chapters (each an even number of pages, so each starts on a fresh leaf with its tab), endpaper, back cover; `spreadOf` numbers spreads. |
+| `src/book/layout.js` | Binds the cover, chapters and back cover into numbered pages; each chapter starts on a left page, and `spreadOf` numbers spreads. |
 | `src/book/useBook.js` | The reading position and every way of changing it: previous / next, a click on a page, chapter jumps, arrow keys, the URL hash. Requests during a move are ignored; Book finishes the move. |
 | `src/components/Book.jsx` | The sheets (two faces each, tabs on the faces) and the facts a turn needs. Completion is one `animationend`. No timing, no measuring. |
 | `src/components/Book.css` | What a turn looks like, in CSS only, and how the book centres itself. |
@@ -32,7 +32,7 @@ One owner per responsibility. Data flows one way: content, then layout, then rea
 
 1. A click, key, tab, Nav segment or hash change reaches `useBook`, which sets a `target` page. While a move is running, further requests are ignored.
 2. `Book.jsx` renders once for the target: `--page`, `--target`, `--last`, `--count` and `data-turn` (`fwd` or `back`) on `.book`; `--order` and `data-turning` on each turning sheet; `data-cast` on the two pages beside the turn.
-3. CSS plays the turn (`Book.css`). Each turning sheet rotates about the spine (`rotateY`), delayed by its order in a chapter jump, with its stacking order swapped once at 50%. One set of keyframes describes a turn forward; a turn back plays them in reverse. The face turning away darkens; a shadow falls on the page it uncovers and on the one it lands on. Each chapter's first leaf has a tab cut out of its paper, on both faces, so it turns with the page; a chapter's pages and tab share its paper colour.
+3. CSS plays the turn (`Book.css`). Each turning sheet rotates about the spine (`rotateY`), delayed by its order in a chapter jump, with its stacking order swapped once at 50%. One set of keyframes describes a turn forward; a turn back plays them in reverse. The face turning away darkens; a shadow falls on the page it uncovers and on the one it lands on. Each chapter's first page carries its tab on both faces of its sheet, so the tab turns with it.
 4. The book's own `centre` animation ends last on every move, and `Book` calls `finish()` from its `animationend`. The resting styles equal the last frame, so nothing jumps.
 5. The turn always plays, whatever motion setting the browser reports: it is the book. The desk's idle loops always run too.
 

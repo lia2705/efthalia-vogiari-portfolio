@@ -10,8 +10,7 @@
    Shape
      cover / back      the hard covers
      chapters[]        { id, tab, title, note, pages }; every chapter has an even
-                       number of pages, so it starts on a fresh leaf that carries its
-                       tab (book/layout.js adds the endpapers inside the covers)
+                       number of pages, so it starts on a left page
        page.type       picks a layout in components/Page.jsx:
                        about | timeline | project | process | gallery | skills | contact */
 
@@ -61,23 +60,6 @@ export const book = {
       pages: [
         {
           type: 'project',
-          title: 'Corvus Sanctum',
-          line: 'Team project, VR game',
-          photos: [
-            img('corvus/02.webp', 'Corvus Sanctum poster'),
-            img('corvus/08.webp', 'Candle-lit VR room with a body on a table'),
-            img('corvus/03.webp', 'The coffin room in Corvus Sanctum'),
-            img('corvus/04.webp', 'A corridor in Corvus Sanctum'),
-          ],
-          bullets: [
-            ['Goal', 'A tense VR escape room that starts in a coffin.'],
-            ['Approach', 'Puzzles plus stealth: make noise and the doctor finds you.'],
-          ],
-          role: 'Map design, 3D modelling, poster',
-          tools: 'Unity, Blender, Miro, Canva',
-        },
-        {
-          type: 'project',
           title: 'HOW: a mental health app',
           line: 'Team project, app design concept',
           photos: [img('how/01.webp', 'High-fidelity screens of the HOW app')],
@@ -98,6 +80,36 @@ export const book = {
             ['Refine', 'Feedback showed us what to cut. We kept finding help and learning easy.'],
             ['Design', 'Then we made wireframes, a design system and high-fidelity screens.'],
           ],
+        },
+        {
+          type: 'project',
+          title: 'Corvus Sanctum',
+          line: 'Team project, VR game',
+          photos: [
+            img('corvus/02.webp', 'Corvus Sanctum poster'),
+            img('corvus/08.webp', 'Candle-lit VR room with a body on a table'),
+            img('corvus/03.webp', 'The coffin room in Corvus Sanctum'),
+            img('corvus/04.webp', 'A corridor in Corvus Sanctum'),
+          ],
+          bullets: [
+            ['Goal', 'A tense VR escape room that starts in a coffin.'],
+            ['Approach', 'Puzzles plus stealth: make noise and the doctor finds you.'],
+          ],
+          role: 'Map design, 3D modelling, poster',
+          tools: 'Unity, Blender, Miro, Canva',
+        },
+        {
+          type: 'project',
+          title: 'XR Interaction in automotive design',
+          line: 'Team project, XR research',
+          photos: [img('automotive/01.webp', 'Foot gesture interaction in a virtual car')],
+          bullets: [
+            ['Goal', 'Find out if feet can help control 3D models in VR.'],
+            ['Approach', 'Foot gestures to zoom, rotate and move, tested with 12 people.'],
+            ['Result', 'Feet for big moves, hands for fine control. People liked both together.'],
+          ],
+          role: 'Research on existing work, gesture concept, study plan, user tests',
+          tools: 'Unity, Varjo XR3, Miro',
         },
         {
           type: 'project', title: 'OrCam vs. Ray-Ban Meta',
@@ -141,19 +153,6 @@ export const book = {
             ['Learn', 'Urgent alerts work best in the middle. Important but less urgent ones work well near the top edge.'],
           ],
           note: 'A small study in an office and lab, not tested in a real factory.',
-        },
-        {
-          type: 'project',
-          title: 'XR Interaction in automotive design',
-          line: 'Team project, XR research',
-          photos: [img('automotive/01.webp', 'Foot gesture interaction in a virtual car')],
-          bullets: [
-            ['Goal', 'Find out if feet can help control 3D models in VR.'],
-            ['Approach', 'Foot gestures to zoom, rotate and move, tested with 12 people.'],
-            ['Result', 'Feet for big moves, hands for fine control. People liked both together.'],
-          ],
-          role: 'Research on existing work, gesture concept, study plan, user tests',
-          tools: 'Unity, Varjo XR3, Miro',
         },
         {
           type: 'project', title: 'Ho My Board!',

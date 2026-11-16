@@ -7,6 +7,15 @@ import './Book.css'
 
 const isCover = (content) => content.type === 'cover' || content.type === 'back'
 
+function Tabs({ chapters, side, flipped, page, onGo }) {
+  return chapters.map((chapter) => <button key={chapter.id} className="book__tab" inert={side === (flipped ? 'front' : 'back')}
+    style={{ '--tab-paper': `var(--color-page-${chapter.note})`, '--index': chapter.n }}
+    onClick={() => onGo(chapter.page)} aria-label={`${chapter.tab} chapter`}
+    aria-current={page >= chapter.page && page < chapter.page + chapter.pages.length ? 'page' : undefined}>
+    {chapter.tab}
+  </button>)
+}
+
 export default function Book({ pages, chapters, page, target, onFinish, onGo, onFlip }) {
   const last = pages.length - 1
   const sheets = Math.ceil(pages.length / 2)
@@ -29,6 +38,10 @@ export default function Book({ pages, chapters, page, target, onFinish, onGo, on
         const tabs = chapters.filter((chapter) => Math.floor(chapter.page / 2) === index)
         return <div key={index} className="book__sheet" data-turning={turning || undefined}
           style={{ '--rest': `${flipped ? -180 : 0}deg`, '--z': flipped ? index + 1 : sheets - index - 1, '--order': order }}>
+          {/* The cover's tab is below the board, so the same board shadow falls over it. */}
+          {index === 0 && <div className="book__face book__face--front">
+            <Tabs chapters={tabs} side="front" flipped={flipped} page={page} onGo={onGo} />
+          </div>}
           {(index === 0 || index === sheets - 1) && <span className="book__board" aria-hidden="true" />}
           {['front', 'back'].map((side, n) => {
             const content = pages[index * 2 + n]
@@ -48,12 +61,7 @@ export default function Book({ pages, chapters, page, target, onFinish, onGo, on
                 <Page page={content} inert={moving || !exposed} />
               </div>
               {/* The tab is part of the leaf, so it is on both faces; the face turned away is inert. */}
-              {tabs.map((chapter) => <button key={chapter.id} className="book__tab" inert={side === (flipped ? 'front' : 'back')}
-                style={{ '--tab-paper': `var(--color-page-${chapter.note})`, '--index': chapter.n }}
-                onClick={() => onGo(chapter.page)} aria-label={`${chapter.tab} chapter`}
-                aria-current={page >= chapter.page && page < chapter.page + chapter.pages.length ? 'page' : undefined}>
-                {chapter.tab}
-              </button>)}
+              {content.type !== 'cover' && <Tabs chapters={tabs} side={side} flipped={flipped} page={page} onGo={onGo} />}
             </div>
           })}
         </div>

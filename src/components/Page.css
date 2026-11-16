@@ -307,8 +307,6 @@
   border-radius: 2px;
 }
 
-/* An endpaper carries the cover's tile pattern, washed pale, instead of rules. */
-.page--endpaper { background: linear-gradient(var(--color-endpaper-wash), var(--color-endpaper-wash)), var(--texture-azulejo) 0 0 / 18cqi; }
 
 /* The contact page starts four rows down and keeps a whole row between its parts. */
 .page--contact { gap: var(--lh); }
