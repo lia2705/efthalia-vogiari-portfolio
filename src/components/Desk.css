@@ -1,0 +1,395 @@
+/* The desk: static cartoon art plus small idle loops.
+   - Sizes and offsets are in --desk-w (App.css), hung off the edges of the open book.
+   - Nothing lies beside the upper half of the book's edges, where the chapter tabs stick out
+     (Book.css), and nothing touches the book. Check by eye at a few window sizes.
+   - Light comes from the top left: every object has a base, a shade (bottom right) and a
+     light (top left) tone, and casts var(--shadow-object) / var(--drop-object).
+   - Animate only translate, rotate, scale and opacity, on HTML elements or an <svg> root,
+     never on SVG children: those repaint every frame. Idle loops always run, whatever the
+     browser's motion setting (they are slow and small). */
+
+/* Oak desk top: planks, grain and a warm overhead light, below everything else. */
+.desk {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at 50% 42%, var(--color-desk-light), transparent 55%, var(--color-desk-vignette)),
+    var(--texture-planks),
+    var(--texture-wood) center / 100% 100% no-repeat,
+    var(--color-desk);
+}
+
+/* A box the size of the open book; objects hang off its edges. */
+.props {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--page-w) * 2);
+  height: calc(var(--page-w) / var(--page-ratio));
+  translate: -50% -50%;
+}
+.props > * { position: absolute; }
+.props svg { display: block; overflow: visible; }
+
+/* ── Coffee, top left ──────────────────────────────────────────── */
+
+.coffee {
+  top: calc(var(--desk-w) * 0.04);
+  right: calc(100% + var(--desk-w) * 0.12);
+  width: calc(var(--desk-w) * 0.36);
+  aspect-ratio: 1;
+}
+.coffee__cup { width: 100%; filter: var(--drop-object); }
+.coffee__china { fill: var(--color-china); }
+.coffee__shade { fill: var(--color-china-shade); }
+.coffee__light { fill: none; stroke: var(--color-china-light); stroke-width: 7; stroke-linecap: round; }
+.coffee__ink { fill: none; stroke: var(--color-line); stroke-width: 2.8; }
+.coffee__china.coffee__ink { fill: var(--color-china); }
+.coffee__rim { fill: none; stroke: var(--color-china-shade); stroke-width: 3; }
+.coffee__brew { stroke: var(--color-line); stroke-width: 2.2; }
+.coffee__brew-light { stop-color: var(--color-coffee-light); }
+.coffee__brew-dark { stop-color: var(--color-coffee); }
+
+/* A dried coffee ring beside the saucer. */
+.coffee__ring {
+  position: absolute;
+  z-index: -1; /* under the saucer, peeking out at the bottom left */
+  top: 58%;
+  left: -14%;
+  width: 52%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, transparent 60%, var(--color-coffee-stain) 63% 66%, transparent 69%);
+}
+
+/* Latte art turns slowly with the coffee. */
+.coffee__art {
+  position: absolute;
+  inset: 25%;
+  animation: spin var(--dur-latte) var(--ease-spin) infinite;
+}
+.coffee__art path { fill: var(--color-crema); }
+.coffee__art .coffee__swirl { fill: none; stroke: var(--color-crema); stroke-width: 3; stroke-linecap: round; opacity: 0.8; }
+
+/* Steam: three soft wisps rise, sway and fade, one after another. */
+.coffee__steam {
+  position: absolute;
+  left: 18%;
+  bottom: 46%;
+  width: 70%;
+  height: 130%;
+  pointer-events: none;
+}
+.coffee__wisp {
+  position: absolute;
+  bottom: 0;
+  left: calc(var(--k) * 30%);
+  width: 40%;
+  height: 85%;
+  opacity: 0;
+  animation: rise var(--dur-steam-rise) var(--ease-spin) infinite;
+  animation-delay: calc(var(--k) * var(--dur-steam-rise) / -3);
+}
+.coffee__wisp svg {
+  width: 100%;
+  height: 100%;
+  animation: sway var(--dur-steam-sway) var(--ease-loop) infinite alternate;
+  animation-delay: calc(var(--k) * var(--dur-steam-sway) / -3);
+}
+.coffee__steam-stop { stop-color: var(--color-steam); }
+
+@keyframes rise {
+  0% { opacity: 0; translate: 0 20%; }
+  20% { opacity: 1; }
+  70% { opacity: 0.8; }
+  100% { opacity: 0; translate: 0 -45%; }
+}
+@keyframes sway {
+  from { translate: -8% 0; }
+  to { translate: 8% 0; }
+}
+@keyframes spin {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+/* ── Pen, left ─────────────────────────────────────────────────── */
+
+.pen {
+  top: calc(100% + var(--desk-w) * 0.05); /* on the desk in front of the book, left of the nav */
+  left: calc(var(--desk-w) * 0.2);
+  width: calc(var(--desk-w) * 0.6);
+  rotate: -3deg;
+  filter: var(--drop-object);
+}
+.pen__body { fill: var(--color-pen); stroke: var(--color-line); stroke-width: 2.6; }
+.pen__shade { fill: var(--color-pen-shade); }
+.pen__light { fill: var(--color-pen-light); }
+.pen__metal { fill: var(--color-metal); stroke: var(--color-line); stroke-width: 2.4; stroke-linejoin: round; }
+.pen__metal-shade { fill: var(--color-metal-shade); }
+.pen__metal-light { fill: var(--color-metal-light); }
+.pen__cap { fill: var(--color-pen-shade); stroke: var(--color-line); stroke-width: 2.4; }
+
+/* ── Sticky notes and a paperclip, bottom left ─────────────────── */
+
+.postits {
+  bottom: calc(var(--desk-w) * 0.08);
+  right: calc(100% + var(--desk-w) * 0.02);
+  display: grid;
+  width: max-content; /* as wide as the longest line: the text never runs off a note */
+  font: 700 max(14px, var(--desk-w) * 0.042) / 1.2 var(--font-hand); /* readable, never below 14px */
+  color: var(--color-ink);
+}
+.postit {
+  position: relative;
+  padding: 0.5em 0.6em 0.7em;
+  border: 1px solid var(--color-line);
+  background: var(--color-postit);
+  box-shadow: var(--shadow-object);
+  rotate: -4deg;
+  transform-origin: top center;
+}
+.postit__title { margin: 0 0 0.35em; }
+.postit__list { margin: 0; padding: 0; list-style: none; white-space: nowrap; }
+.postit + .postit {
+  margin: 3% 0 0;
+  background: var(--note-pink);
+  rotate: 4deg;
+}
+/* The bottom corner curls up off the desk. */
+.postit::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 14%;
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, var(--color-postit-shade) 50%, var(--color-desk) 50%);
+  border-top: 1px solid var(--color-line);
+  border-left: 1px solid var(--color-line);
+  border-radius: 0 0 0 30%;
+}
+.postit + .postit::after { background: linear-gradient(135deg, var(--note-pink-shade) 50%, var(--color-desk) 50%); }
+
+.clip { filter: var(--drop-object); }
+.clip__edge { fill: none; stroke: var(--color-line); stroke-width: 5.6; stroke-linecap: round; }
+.clip__wire { fill: none; stroke: var(--color-metal-light); stroke-width: 2.6; stroke-linecap: round; }
+.postits__clip {
+  position: absolute;
+  top: -6%;
+  left: 12%;
+  width: 7%;
+  rotate: -8deg;
+}
+
+/* ── Music player with earphones, right ────────────────────────── */
+
+.music {
+  top: calc(var(--desk-w) * -0.04); /* above the tabs */
+  left: calc(100% + var(--desk-w) * 0.22);
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--desk-w) * 0.02);
+  width: calc(var(--desk-w) * 0.25);
+  aspect-ratio: 0.6;
+  padding: calc(var(--desk-w) * 0.018);
+  border: 1.5px solid var(--color-line);
+  border-radius: 12% / 7%;
+  background: linear-gradient(160deg, var(--color-china-light), var(--color-china) 40%, var(--color-china-shade));
+  /* thickness: a darker side edge under the face, then the object shadow */
+  box-shadow:
+    inset 0 0 0 2px var(--color-shine-strong),
+    0.4vmin 0.7vmin 0 var(--color-metal-shade),
+    0.4vmin 0.7vmin 0 1.5px var(--color-line),
+    var(--shadow-object);
+  rotate: 9deg;
+  font-family: var(--font-display);
+}
+
+/* Wired earbuds plugged into the jack on top: a white cable with an ink edge. */
+.earphones {
+  position: absolute;
+  top: -78%;
+  left: -40%;
+  width: 220%;
+  pointer-events: none;
+  filter: var(--drop-object);
+}
+.earphones path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.earphones__edge { stroke: var(--color-line); stroke-width: 6; }
+.earphones__cable { stroke: var(--color-china); stroke-width: 3.6; }
+.earphones__edge.earphones__stem { stroke-width: 11.5; }
+.earphones__cable.earphones__stem { stroke-width: 8; }
+.earphones__part { fill: var(--color-china); stroke: var(--color-line); stroke-width: 2; }
+
+.music__screen {
+  display: grid;
+  gap: 0.35em;
+  padding: 10% 8%;
+  border: 1px solid var(--color-line);
+  border-radius: 6%;
+  background: var(--color-screen);
+  box-shadow: inset 0 0.3vmin 0.5vmin var(--color-inset-shade);
+  color: var(--color-ink);
+  font-size: calc(var(--desk-w) * 0.024);
+  line-height: 1.2;
+  text-align: left;
+}
+.music__title {
+  overflow: hidden;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.music__artist { color: var(--color-ink-soft); }
+
+/* Equaliser: fixed-height bars that scale from the bottom, each at its own pace. */
+.music__eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 8%;
+  width: 34%;
+  height: 1em;
+}
+.music__eq i {
+  flex: 1;
+  height: 100%;
+  background: var(--color-cover);
+  transform-origin: bottom;
+  animation: eq calc(var(--dur-eq) + var(--n) * var(--dur-eq) / 3) var(--ease-loop) infinite alternate;
+  animation-delay: calc(var(--n) * var(--dur-eq) / -2);
+}
+@keyframes eq {
+  from { scale: 1 0.25; }
+  to { scale: 1 1; }
+}
+
+.music__progress {
+  overflow: hidden;
+  height: 0.4em;
+  border: 1px solid var(--color-line);
+  border-radius: 99px;
+  background: var(--color-china);
+}
+.music__played {
+  display: block;
+  height: 100%;
+  background: var(--color-cover);
+  transform-origin: left;
+  animation: play var(--dur-track) var(--ease-spin) both;
+}
+@keyframes play {
+  from { scale: 0 1; }
+  to { scale: 1 1; }
+}
+
+.music__wheel {
+  align-self: center;
+  margin-block: auto;
+  width: 78%;
+  aspect-ratio: 1;
+  border: 1.5px solid var(--color-line);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-china) 0 26%, var(--color-line) 27% 28.5%, var(--color-china-shade) 29.5%);
+  box-shadow: inset 0 0.3vmin 0.5vmin var(--color-inset-shade-soft);
+}
+
+/* ── Bag of chips, bottom-left corner ──────────────────────────── */
+
+.snack {
+  position: fixed;
+  left: calc(var(--desk-w) * 0.01);
+  bottom: calc(var(--desk-w) * -0.1);
+  width: calc(var(--desk-w) * 0.36);
+}
+.snack svg { display: block; overflow: visible; }
+.snack__bag { width: 100%; rotate: 22deg; filter: var(--drop-object); }
+.snack__loose {
+  position: absolute;
+  left: 112%;
+  bottom: 40%;
+  width: 22%;
+  filter: var(--drop-object);
+}
+.snack__foil { fill: var(--color-bag); }
+.snack__shade { fill: var(--color-bag-shade); }
+.snack__light { stroke: var(--color-bag-light); stroke-width: 10; stroke-linecap: round; opacity: 0.6; }
+.snack__crinkle { fill: none; stroke: var(--color-bag-light); stroke-width: 3; stroke-linecap: round; opacity: 0.5; }
+.snack__ink { fill: none; stroke: var(--color-line); stroke-width: 3.4; stroke-linejoin: round; }
+.snack__foil.snack__ink { fill: var(--color-bag); }
+.snack__mouth { fill: var(--color-coffee-light); stroke: var(--color-line); stroke-width: 3.2; }
+.snack__chip { fill: var(--color-chip); stroke: var(--color-line); stroke-width: 3; }
+.snack__ridge { fill: none; stroke: var(--color-chip-shade); stroke-width: 2.2; stroke-linecap: round; }
+.snack__glint { fill: var(--color-chip-light); }
+.snack__label { fill: var(--color-postit); stroke: var(--color-line); stroke-width: 3; }
+.snack__label-shade { fill: var(--color-postit-shade); }
+.snack__text { font: 700 40px var(--font-hand); fill: var(--color-ink); }
+
+/* ── The cat, curled up below the bottom-right corner ──────────── */
+
+/* Seen from above like everything on the desk: a round loaf standing on the screen's bottom edge. --u is one unit of the 300 x 150 drawing, so back and tail scale together. */
+.cat {
+  --u: calc(var(--desk-w) * 0.0024);
+
+  position: fixed;
+  right: calc(var(--desk-w) * -0.08); /* half off the screen's right edge too */
+  bottom: calc(var(--u) * -4);
+  width: calc(var(--u) * 300);
+  height: calc(var(--u) * 150);
+}
+.cat svg { display: block; overflow: visible; filter: var(--drop-object); }
+.cat__body { position: absolute; inset: 0; }
+.cat__fur { fill: var(--color-cat); }
+.cat__ink { fill: none; stroke: var(--color-line); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+.cat__shade { fill: var(--color-cat-shade); }
+.cat__light { fill: none; stroke: var(--color-cat-light); stroke-width: 10; stroke-linecap: round; opacity: 0.75; }
+.cat__light-fill { fill: var(--color-cat-light); opacity: 0.7; }
+.cat__band { fill: none; stroke: var(--color-cat-stripe); stroke-width: 8; stroke-linecap: round; }
+.cat__tuft { fill: var(--color-cat); stroke: var(--color-line); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.cat__stripe { fill: var(--color-cat-stripe); }
+.cat__strand { fill: none; stroke: var(--color-cat-shade); stroke-width: 2.6; stroke-linecap: round; }
+
+/* The tail comes out at the top of the loaf and lies across the desk; touching it starts one big
+   swish. */
+.cat__tail {
+  position: absolute;
+  left: calc(var(--u) * 150);
+  bottom: calc(var(--u) * 128);
+  width: 0;
+  height: 0;
+  cursor: pointer;
+}
+.cat__tail[data-swish] { animation: swish var(--dur-tail-swish) var(--ease-out); }
+.cat__segment {
+  position: absolute;
+  left: 0;
+  top: calc(var(--up) * var(--u) * -1);
+  rotate: var(--rest);
+  transform-origin: 0 0;
+  animation: wag var(--dur-tail) var(--ease-loop) infinite alternate;
+  animation-delay: calc(var(--i) * var(--dur-tail-lag) * -1);
+}
+.cat__segment > svg {
+  position: absolute;
+  left: calc(var(--u) * -50);
+  top: calc(var(--u) * -90);
+  width: calc(var(--u) * 100);
+  height: calc(var(--u) * 100);
+}
+@keyframes wag {
+  from { rotate: calc(var(--rest) - var(--swing)); }
+  to { rotate: calc(var(--rest) + var(--swing)); }
+}
+@keyframes swish {
+  30% { rotate: -14deg; }
+  60% { rotate: 10deg; }
+  85% { rotate: -3deg; }
+}
+
+/* A phone held sideways is too short for the desk objects; only the wood stays. */
+@media (max-height: 500px) {
+  .props,
+  .snack,
+  .cat { display: none; }
+}

@@ -1,0 +1,12 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.playwright-mcp/
+.DS_Store
+.env
+.env.*
+
+# Local publishing tools: the push script and agent notes stay off GitHub.
+lia.sh
+AGENTS.md

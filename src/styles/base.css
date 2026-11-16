@@ -1,0 +1,46 @@
+/* Reset and document defaults. Reads semantic tokens only. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  overflow: hidden; /* one book on one screen: nothing scrolls */
+  background: var(--color-desk);
+  color: var(--color-ink);
+  font: 400 1rem/1.5 var(--font-hand);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+/* Keyboard focus remains visible across the book, tabs and navigation. */
+:focus-visible {
+  outline: 2px solid var(--color-cover);
+  outline-offset: 3px;
+}

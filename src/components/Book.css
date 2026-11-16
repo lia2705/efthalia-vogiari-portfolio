@@ -1,0 +1,183 @@
+/* What a turn looks like. Book.jsx sets facts; CSS plays the turn.
+
+   - A sheet rotates about the spine (rotateY); its two faces hide their backs. Never put opacity
+     below 1, filter, clip-path or overflow on .book__sheet: that flattens it. A face has no 3D
+     children, so its edge filter is safe.
+   - One set of keyframes describes a turn forward; a turn back plays them in reverse (--way), and
+     the face turned away plays its shade the other way (--way-flip).
+   - --ease-turn stays symmetric: the stacking order swaps at 50%, when a sheet is edge-on.
+   - A closed book sits centred: front cover shifted -0.5 page, back cover +0.5, open book 0.
+   - Every move ends with the book's own animation (centre); Book.jsx finishes on its animationend. */
+
+.book {
+  --page-h: calc(var(--page-w) / var(--page-ratio));
+  --board-width: calc(var(--page-w) * 0.018);
+  --z-turn: 100; /* above every resting sheet */
+  --shift-page: calc((max(0, var(--page) - var(--last) + 1) - 1 + min(var(--page), 1)) * 0.5);
+  --shift-target: calc((max(0, var(--target) - var(--last) + 1) - 1 + min(var(--target), 1)) * 0.5);
+  --way: normal;
+  --way-flip: reverse;
+  position: relative;
+  flex: none;
+  width: calc(var(--page-w) * 2);
+  height: var(--page-h);
+  perspective: calc(var(--page-w) * 4); /* a turning page rises clearly toward the reader */
+  translate: calc(var(--page-w) * var(--shift-page)) 0;
+  will-change: translate; /* its own layer at rest too, so a turn starting redraws no text */
+}
+.book[data-turn='back'] { --way: reverse; --way-flip: normal; }
+.book[data-turn] { animation: centre calc(var(--dur-turn) + max(var(--count) - 1, 0) * var(--turn-stagger)) var(--ease-turn) both; }
+@keyframes centre {
+  from { translate: calc(var(--page-w) * var(--shift-page)) 0; }
+  to { translate: calc(var(--page-w) * var(--shift-target)) 0; }
+}
+
+.book__sheet {
+  --delay: calc(var(--order) * var(--turn-stagger));
+  position: absolute;
+  inset: 0 0 0 50%;
+  z-index: var(--z);
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--rest));
+  will-change: transform; /* always its own layer, so starting a turn moves no pixel */
+  pointer-events: none;
+}
+/* The two cover boards frame the book and carry its shadow on the desk, so the shadow moves with
+   a cover as it turns. */
+.book__board {
+  position: absolute;
+  inset: 0;
+  border: var(--board-width) solid var(--color-cover);
+  border-left: 0;
+  border-radius: 0 var(--radius-page) var(--radius-page) 0;
+  box-shadow: var(--shadow-block);
+}
+/* A face is one side of a leaf: its page and its tab share one thin drawn edge, so stacked leaves
+   read apart and a tab below shows the edge of the page above crossing its root. */
+.book__face {
+  --paper: var(--color-page);
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  filter: var(--edge-leaf);
+}
+.book__face--back { transform: rotateY(180deg); }
+
+/* A page: paper grain and gutter shading; ::before is the shade a turn fades in, ::after the
+   shadow the turning sheet casts on the page below. */
+.book__surface {
+  --spine: to right;
+  position: absolute;
+  inset: var(--board-width) var(--board-width) var(--board-width) 0;
+  container-type: size; /* cqi for page sizes, cqh for the page's row grid */
+  border-radius: var(--radius-page);
+  background:
+    var(--texture-paper-grain),
+    linear-gradient(var(--spine), var(--color-shade-gutter), transparent 6%),
+    var(--paper);
+  visibility: hidden;
+}
+.book__face--back .book__surface {
+  --spine: to left;
+  inset: var(--board-width) 0 var(--board-width) var(--board-width);
+}
+.book__surface[data-cover] { inset: 0; }
+.book__surface[data-exposed] { visibility: inherit; pointer-events: auto; }
+.book__surface::before,
+.book__surface::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+}
+.book__face--front .book__surface::before { background: linear-gradient(to right, transparent 10%, var(--color-shade-free)); }
+.book__face--back .book__surface::before { background: linear-gradient(to left, transparent 10%, var(--color-shade-free)); }
+.book__face--front .book__surface[data-cast]::after {
+  background: linear-gradient(to right, var(--color-shade-cast-start), var(--color-shade-cast-end) 55%, transparent);
+  transform-origin: left;
+}
+.book__face--back .book__surface[data-cast]::after {
+  background: linear-gradient(to left, var(--color-shade-cast-start), var(--color-shade-cast-end) 55%, transparent);
+  transform-origin: right;
+}
+
+/* Like an index in an old address book, a chapter's first leaf has a tab cut out of the paper: it
+   continues the page past the cover edge, in the chapter's paper, written on both faces. No shadow
+   and no seam: it is the page. Every tab is the same size, one fixed step below the last, so a new
+   chapter simply adds the next tab down the edge. */
+.book__tab {
+  --fillet: 0.45em; /* the curve where the tab grows out of the page edge */
+  --root: none; /* the edge of a leaf lying over the tab's root, see below */
+  position: absolute;
+  top: calc(22% + var(--index) * 9.5%);
+  left: calc(100% - var(--board-width));
+  width: 6.4em;
+  pointer-events: auto;
+  padding: 0.4em 0 0.35em;
+  text-align: center;
+  background: var(--root), var(--texture-paper-grain), var(--tab-paper);
+  color: var(--color-ink);
+  border-radius: 0 0.6em 0.6em 0;
+  font: 700 clamp(13px, calc(var(--page-w) * 0.036), 20px) / 1 var(--font-hand);
+}
+.book__tab::before,
+.book__tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: var(--fillet);
+  height: var(--fillet);
+}
+.book__tab::before { bottom: 100%; background: var(--root), radial-gradient(circle at 100% 0, transparent var(--fillet), var(--tab-paper) calc(var(--fillet) + 0.5px)); }
+.book__tab::after { top: 100%; background: var(--root), radial-gradient(circle at 100% 100%, transparent var(--fillet), var(--tab-paper) calc(var(--fillet) + 0.5px)); }
+.book__face--back .book__tab {
+  left: auto;
+  right: calc(100% - var(--board-width));
+  border-radius: 0.6em 0 0 0.6em;
+}
+.book__face--back .book__tab::before,
+.book__face--back .book__tab::after { left: auto; right: 0; }
+.book__face--back .book__tab::before { background: var(--root), radial-gradient(circle at 0 0, transparent var(--fillet), var(--tab-paper) calc(var(--fillet) + 0.5px)); }
+.book__face--back .book__tab::after { background: var(--root), radial-gradient(circle at 0 100%, transparent var(--fillet), var(--tab-paper) calc(var(--fillet) + 0.5px)); }
+/* A tab whose own page lies under other leaves shows the edge of the leaf above crossing its root. */
+.book__surface:not([data-exposed]) ~ .book__tab { --root: linear-gradient(to right, var(--color-leaf-edge) 1px, transparent 1px); }
+.book__face--back .book__surface:not([data-exposed]) ~ .book__tab { --root: linear-gradient(to left, var(--color-leaf-edge) 1px, transparent 1px); }
+
+/* ── A turn ────────────────────────────────────────────────────── */
+
+/* The sheet swings over the spine, delayed by its order in a chapter jump; its stacking order
+   flips once, at 50% (sheet-z follows reading order, so it always plays forward). */
+.book__sheet[data-turning] {
+  animation:
+    sheet var(--dur-turn) var(--ease-turn) var(--delay) both var(--way),
+    sheet-z var(--dur-turn) var(--ease-step) var(--delay) both;
+}
+@keyframes sheet {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(-180deg); }
+}
+@keyframes sheet-z {
+  0% { z-index: calc(var(--z-turn) + var(--count) - var(--order)); }
+  50%, 100% { z-index: calc(var(--z-turn) + var(--order)); }
+}
+
+/* The face turning away darkens; the face turning in lightens. */
+.book__sheet[data-turning] .book__face--front .book__surface::before { animation: shade var(--dur-turn) var(--ease-turn) var(--delay) both var(--way); }
+.book__sheet[data-turning] .book__face--back .book__surface::before { animation: shade var(--dur-turn) var(--ease-turn) var(--delay) both var(--way-flip); }
+@keyframes shade {
+  from { opacity: 0; }
+  50%, 100% { opacity: 1; }
+}
+
+/* The turning sheet's shadow on the page it uncovers and on the page it lands on. */
+.book__face--front .book__surface[data-cast]::after { animation: cast var(--dur-turn) var(--ease-turn) both var(--way); }
+.book__face--back .book__surface[data-cast]::after { animation: cast var(--dur-turn) var(--ease-turn) both var(--way-flip); }
+@keyframes cast {
+  from { opacity: 0; scale: 0.02 1; }
+  35% { opacity: 1; scale: 0.55 1; }
+  to { opacity: 0; scale: 0.9 1; }
+}

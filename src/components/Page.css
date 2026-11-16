@@ -1,0 +1,426 @@
+/* Page layouts: a ruled diary page with taped-in prints and handwritten notes.
+   Sizes use cqi (1% of the page width) and cqh, so a page keeps the same composition at
+   any screen size, like a printed book scaled up or down.
+
+   One baseline grid: --lh is the gap between the ruled lines. Every line-height is
+   var(--lh) (or a whole multiple) and every vertical gap a whole multiple, and the content
+   height is snapped to whole rows with round(), so text lands on the rules and the flexible
+   rows (photos) get a whole number of rows too. Everything here is --font-hand; headings are
+   bold with the underline drawn on the rule. */
+
+.page {
+  --pad-x: 9cqi;
+  --pad-y: 8cqi;
+  --pad-b: 12cqi; /* room for the page number */
+  --lh: 4.8cqi;
+  --rule-shift: -1cqi; /* lifts the rules so body text sits just above them */
+  --underline: 0.55cqi; /* heading underline, centred on the rule */
+  --font-centre: 0.35; /* (ascent - descent) / 2 of Shantell Sans, in em: aligns heading and body baselines */
+  --text-body: 3.05cqi;
+  --text-head: 3.9cqi;
+  --content-h: round(down, calc(100cqh - var(--pad-y) - var(--pad-b)), var(--lh));
+  --accent: var(--chapter, var(--color-accent));
+
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--pad-y) var(--pad-x) calc(100cqh - var(--pad-y) - var(--content-h));
+  overflow: hidden;
+  background: repeating-linear-gradient(transparent 0 calc(var(--lh) - 1px), var(--color-ruling) calc(var(--lh) - 1px) var(--lh))
+    0 calc(var(--pad-y) + var(--rule-shift)) / 100% var(--content-h) no-repeat;
+  font-size: var(--text-body);
+  line-height: var(--lh);
+  color: var(--color-ink-soft);
+}
+
+/* ── Shared pieces ─────────────────────────────────────────────── */
+
+/* Headings: bold, underlined in the chapter colour. The heading is lifted onto the body
+   baseline, and the underline sits on the ruled line below it. */
+.title {
+  align-self: flex-start;
+  translate: 0 calc(-1 * var(--font-centre) * (var(--text-head) - var(--text-body)));
+  font: 700 var(--text-head) / var(--lh) var(--font-hand);
+  color: var(--color-ink);
+  text-wrap: balance;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: var(--underline);
+  text-decoration-skip-ink: none; /* the underline lies on the rule, through descenders */
+  /* distance from the body baseline (the heading is lifted onto it) to where the underline's top edge
+     must be for its centre to lie on the rule: rule top + half the rule - half the underline */
+  text-underline-offset: calc(var(--lh) / 2 - var(--font-centre) * var(--text-body) + var(--rule-shift) - 0.5px - var(--underline) / 2);
+}
+
+/* The one-line summary under a heading. */
+.line { color: var(--color-ink); }
+
+.bullets {
+  padding: 0;
+  list-style: none;
+}
+.bullets li {
+  position: relative;
+  padding-left: 4.5cqi;
+}
+.bullets li::before {
+  content: '';
+  position: absolute;
+  top: calc((var(--lh) - 1.8cqi) / 2);
+  left: 0.5cqi;
+  width: 1.8cqi;
+  aspect-ratio: 1;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Label / text rows on project pages; both lists share one label column. */
+.facts {
+  display: grid;
+  grid-template-columns: 19cqi 1fr;
+  gap: 0 2cqi;
+  align-items: start;
+}
+.facts div { display: contents; }
+.facts dt { font-weight: 700; color: var(--color-ink); }
+.facts dd { color: var(--color-ink-soft); }
+.facts--meta {
+  background: repeating-linear-gradient(90deg, var(--color-rule) 0 0.8cqi, transparent 0.8cqi 1.4cqi) 0 0 / 100% 1.5px no-repeat;
+}
+.facts--meta dd { color: var(--color-ink); }
+
+/* A single process layout keeps the longer case studies visually consistent. */
+.process {
+  padding: 0;
+  list-style: none;
+}
+.process li { display: grid; }
+.process strong { color: var(--color-ink); font-weight: 700; }
+.process__note { color: var(--color-ink-faint); }
+
+.page--skills .group { margin-top: var(--lh); }
+.page--gallery .group { display: flex; flex: 0 1 auto; flex-direction: column; min-height: 0; }
+.label { font-weight: 700; color: var(--color-ink); }
+
+/* Taped-in prints: white border, a strip of washi tape, each at its own angle.
+   Prints flow top-down like the rest of the page. A print is as tall as its image needs at the
+   width its layout allows (--w), rounded down to whole rows; when the page is tight the row
+   shrinks and the image follows, keeping its proportions. A frame's border plus the tape room
+   above the row add up to exactly one row, so the text after the prints stays on the rules. */
+.photos {
+  --cols: 1;
+  --photo-gap: 3cqi;
+  --pad: calc((var(--lh) - 3cqi) / 2);
+  --edge: 5cqi; /* prints may run wider than the text, almost to the page edge */
+  --w: calc((100cqi - 2 * var(--edge) - (var(--cols) - 1) * var(--photo-gap)) / var(--cols) - 2 * var(--pad));
+  margin-inline: calc(var(--edge) - var(--pad-x));
+  display: flex;
+  flex: 0 1 auto;
+  min-height: 0;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  gap: var(--photo-gap);
+  padding-block: 2cqi 1cqi;
+  margin-bottom: var(--lh); /* one blank rule between the prints and the text below */
+}
+.photo {
+  --ratio: var(--print-ratio, 1.5);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
+  padding: var(--pad);
+  background: var(--color-page);
+  box-shadow: var(--shadow-photo);
+  rotate: -2deg;
+}
+.photo:nth-child(2) { rotate: 2.5deg; }
+.photo:nth-child(3) { rotate: -1.5deg; }
+.photo::before {
+  content: '';
+  position: absolute;
+  top: -1.8cqi;
+  left: 50%;
+  width: 12cqi;
+  height: 3.6cqi;
+  translate: -50%;
+  rotate: -4deg;
+  background: color-mix(in oklab, var(--accent) 75%, transparent);
+  clip-path: polygon(0 0, 4% 20%, 0 40%, 4% 60%, 0 80%, 4% 100%, 100% 100%, 96% 80%, 100% 60%, 96% 40%, 100% 20%, 96% 0);
+}
+.photo:nth-child(2)::before { rotate: 5deg; }
+
+.photo__image {
+  flex: 0 1 auto;
+  min-height: 0;
+  max-width: var(--w);
+  height: round(calc(var(--w) / var(--ratio)), var(--lh));
+  aspect-ratio: var(--ratio);
+  overflow: hidden;
+}
+.photo img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.photo figcaption { flex: none; text-align: center; color: var(--color-ink); }
+/* Layouts that share a row between prints, or stack them. */
+.page--project .photos[data-count='2'] { --cols: 2; }
+.page--process .photos[data-count='2'] { flex-direction: column; align-items: center; }
+.page--gallery .photos[data-count='3'] { --cols: 3; }
+.page--project .photos[data-count='4'] {
+  --cols: 2;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-items: center;
+  align-items: start;
+}
+
+/* Page number: in a doodled circle at the outer corner. */
+.folio {
+  position: absolute;
+  bottom: 3.5cqi;
+  display: grid;
+  place-items: center;
+  width: 7cqi;
+  aspect-ratio: 1;
+  border: 1.5px solid var(--color-ink-faint);
+  border-radius: 52% 46% 55% 44%;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-ink-soft);
+}
+.page[data-side='left'] .folio { left: 4cqi; rotate: -6deg; }
+.page[data-side='right'] .folio { right: 4cqi; rotate: 5deg; }
+
+/* ── Page types ────────────────────────────────────────────────── */
+
+/* The portrait is a crop: the frame follows the row's height, the image fills it. */
+.page--about .photo { --ratio: 0.8333; }
+.page--about .photo img { object-fit: cover; } /* the file is already cropped to the frame */
+
+.timeline {
+  --when: 16cqi;
+  --dot: 3cqi;
+  --gap-x: 3cqi;
+
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--when) var(--dot) 1fr;
+  align-content: start;
+  gap: 0 var(--gap-x);
+  margin-top: var(--lh); /* one blank rule under the heading */
+  padding: 0;
+  list-style: none;
+}
+/* One dashed line through every dot. */
+.timeline::before {
+  content: '';
+  position: absolute;
+  inset: 3cqi auto 3cqi calc(var(--when) + var(--gap-x) + var(--dot) / 2);
+  border-left: 1.5px dashed var(--color-ink-faint);
+}
+.timeline__item {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: start;
+}
+.timeline__when { color: var(--color-ink); }
+
+/* Work is a round dot in the chapter colour, studies a cobalt diamond. */
+.timeline__dot,
+.timeline__key i {
+  position: relative;
+  width: var(--dot);
+  aspect-ratio: 1;
+  margin-top: calc((var(--lh) - var(--dot)) / 2);
+  border: 1.5px solid var(--color-line);
+  border-radius: 50%;
+  background: var(--accent);
+}
+[data-kind='study'] > .timeline__dot,
+.timeline__key [data-kind='study'] {
+  border-radius: 2px;
+  rotate: 45deg;
+  scale: 0.85;
+  background: var(--color-cover);
+}
+/* A loose, hand-drawn ring marks what is happening now. */
+[data-now] > .timeline__dot::after,
+.timeline__key [data-now]::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border: 1.5px solid var(--color-ribbon);
+  border-radius: 47% 55% 44% 53%;
+  rotate: -12deg;
+}
+
+.timeline__body { display: grid; grid-column: 3 / -1; }
+.timeline__body strong { color: var(--color-ink); font-weight: 700; }
+.timeline__detail { display: block; color: var(--color-ink-soft); }
+.timeline__key {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqi;
+  color: var(--color-ink-soft);
+}
+.timeline__key i { --dot: 2.4cqi; margin: 0 0 0 2cqi; }
+.timeline__key i:first-child { margin-left: 0; }
+.timeline__key [data-now] { background: var(--color-page); }
+
+/* Skills as sticker chips with a flat ink shadow. A chip is one row high; the vertical
+   margin keeps the pill smaller than the row so chips on neighbouring rows do not touch. */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.6cqi;
+  padding: 0;
+  list-style: none;
+}
+.chips li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(var(--lh) - 0.9cqi);
+  margin-block: 0.45cqi;
+  padding-inline: 2.2cqi;
+  border: 1px solid var(--color-line);
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--accent) 45%, var(--color-page));
+  box-shadow: 0.4cqi 0.5cqi 0 var(--color-line);
+  color: var(--color-ink);
+}
+.languages {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 3cqi;
+  padding: 0;
+  list-style: none;
+  color: var(--color-ink);
+}
+.languages li { display: flex; align-items: center; gap: 2cqi; }
+.languages span { color: var(--color-ink-faint); }
+.flag {
+  width: 5.4cqi;
+  border: 1px solid var(--color-line);
+  border-radius: 2px;
+}
+
+/* An endpaper carries the cover's tile pattern, washed pale, instead of rules. */
+.page--endpaper { background: linear-gradient(var(--color-endpaper-wash), var(--color-endpaper-wash)), var(--texture-azulejo) 0 0 / 18cqi; }
+
+/* The contact page starts four rows down and keeps a whole row between its parts. */
+.page--contact { gap: var(--lh); }
+.page--contact > :first-child { margin-top: calc(var(--lh) * 4); }
+.title--big {
+  --text-head: 9cqi;
+  translate: none;
+  line-height: calc(var(--lh) * 2);
+}
+.email {
+  align-self: flex-start;
+  font: 700 5cqi / var(--lh) var(--font-hand);
+  color: var(--color-ink);
+  text-decoration: none;
+  background: linear-gradient(transparent 55%, color-mix(in oklab, var(--color-accent) 80%, transparent) 55%) 0 0 / 100% 100% no-repeat;
+}
+.email:hover { color: var(--color-cover); }
+.page[data-open] .email { animation: highlight var(--dur-settle) var(--ease-out) calc(var(--dur-settle) / 2) backwards; }
+@keyframes highlight { from { background-size: 0 100%; } }
+.links {
+  display: flex;
+  gap: 2.4cqi;
+  padding: 0;
+  list-style: none;
+}
+.links a {
+  display: block;
+  padding: 1.4cqi 3.4cqi;
+  border: 1px solid var(--color-line);
+  border-radius: 99px;
+  background: var(--color-page);
+  box-shadow: 0.5cqi 0.6cqi 0 var(--color-line);
+  color: var(--color-ink);
+  font-weight: 700;
+  text-decoration: none;
+  transition: translate var(--dur-ui) var(--ease-out), box-shadow var(--dur-ui) var(--ease-out);
+}
+.links a:hover { translate: 0.3cqi 0.3cqi; box-shadow: 0.2cqi 0.3cqi 0 var(--color-line); }
+
+/* Covers: azulejo-tiled boards with a cobalt cloth spine and a paper label.
+   The spine is on the left of the front cover and on the right of the back. */
+.page--cover,
+.page--back {
+  --spine: 9%;
+  --dir: to right;
+
+  align-items: center;
+  justify-content: center;
+  padding-inline: calc(var(--spine) + 6cqi) 8cqi;
+  border-radius: inherit;
+  background:
+    linear-gradient(var(--dir), var(--color-cover-dark), transparent 2.5%, transparent calc(var(--spine) - 1%),
+      var(--color-cover-edge) var(--spine), var(--color-cover-shine) calc(var(--spine) + 0.5%), transparent calc(var(--spine) + 2.5%)),
+    linear-gradient(var(--dir), var(--color-cover) var(--spine), transparent var(--spine)),
+    linear-gradient(135deg, var(--color-cover-gloss), transparent 35%, var(--color-cover-gloss-faint) 60%, transparent 75%),
+    var(--texture-azulejo) 0 0 / 22cqi 22cqi;
+  box-shadow:
+    inset 0.4cqi 0.4cqi 0.6cqi var(--color-cover-rim),
+    inset -0.6cqi -0.6cqi 1.2cqi var(--color-cover-dark);
+}
+.page--back {
+  --dir: to left;
+  padding-inline: 8cqi calc(var(--spine) + 6cqi);
+}
+
+/* Paper label stuck on the tiles, with a cobalt keyline. */
+.cover-label {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 2cqi;
+  padding: 7cqi 8cqi 6cqi;
+  border: 1.5px solid var(--color-line);
+  background: var(--color-page);
+  outline: 1px solid var(--color-cover);
+  outline-offset: -2.4cqi;
+  box-shadow: var(--shadow-object);
+  rotate: -1.5deg;
+}
+.cover-label__name {
+  display: grid;
+  justify-items: center;
+  font: 800 12.5cqi / 0.9 var(--font-display);
+  font-stretch: 75%;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+.cover-label__line {
+  font: 700 6.4cqi / 1.1 var(--font-hand);
+  color: var(--color-cover);
+}
+
+.star {
+  position: absolute;
+  top: -6cqi;
+  right: -6cqi;
+  width: 13cqi;
+  fill: var(--color-accent);
+  stroke: var(--color-line);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  filter: var(--drop-object);
+  animation: star-spin var(--dur-star) var(--ease-spin) infinite;
+}
+@keyframes star-spin { to { rotate: 360deg; } }
+
+/* Elastic closure band near the fore-edge. */
+.band {
+  position: absolute;
+  inset-block: 0;
+  right: 6cqi;
+  width: 3cqi;
+  background: linear-gradient(90deg, var(--color-band), var(--color-band-sheen) 45%, var(--color-band));
+  box-shadow: 0.5cqi 0 0.9cqi var(--color-band-shadow), -0.2cqi 0 0.4cqi var(--color-band-shadow-soft);
+}

@@ -1,0 +1,186 @@
+/* Design tokens: the one place for colours, times, easings, font families and shadows.
+   1. Primitives: the raw palette, tones, families and timings. Components never read these.
+   2. Semantic: what a value is for. Components read only these.
+   Nothing else in src/ may hold a colour, time, easing or font-family literal (Stylelint
+   enforces it), and a token nothing reads is deleted (tests/unit/dead-tokens.test.mjs).
+   Every object colour has a base, a shade and a light tone. Component geometry stays local. */
+
+:root {
+  /* ── 1. Primitives ───────────────────────────────────────────── */
+
+  /* Lia's brand accents, sampled from her current Canva portfolio */
+  --lime-400: #c7e15f;
+  --raspberry-500: #c93063;
+  --raspberry-200: #f0bccd;
+
+  /* Neutrals */
+  --paper-0: #ffffff;
+  --paper-50: #fdfbf6;
+  --paper-100: #f3efe6;
+  --paper-200: #e6dfd1;
+  --ink-900: #24201d;
+  --ink-600: #5a544d;
+  --ink-400: #8f877d;
+  --ink-200: #d9d4ca;
+  --sky-200: #dbe6ee;
+  --azure-200: #cddcf2;
+  --cobalt-700: #1f3f8f;
+  --butter-300: #fbe38b;
+
+  /* Desk objects: each colour comes in light, base and shade steps */
+  --oak-400: #b98a5c;
+  --tabby-200: #f2bd80;
+  --tabby-400: #d48f4a;
+  --tabby-600: #a8682c;
+  --tabby-700: #8a5426;
+  --raspberry-300: #e8789c;
+  --raspberry-700: #9e2049;
+  --espresso-400: #8a5a35;
+  --espresso-800: #3a2112;
+  --crema-300: #dcb78c;
+  --steel-100: #f2f1ed;
+  --steel-300: #cbc8c1;
+  --steel-500: #9d9a93;
+  --lcd-200: #d3e2df;
+  --gold-100: #fbe3a6;
+  --gold-300: #f1c25a;
+  --gold-500: #c98f2e;
+  --butter-500: #e3c25a;
+
+  --family-grotesque: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --family-shantell: 'Shantell Sans Variable', system-ui, sans-serif;
+
+  /* ── 2. Semantic ─────────────────────────────────────────────── */
+
+  --color-desk: var(--oak-400);
+  --color-page: var(--paper-50);
+  --color-page-edge: var(--paper-100);
+  --color-page-under: var(--paper-200);
+  --color-ruling: var(--sky-200);
+  --color-ink: var(--ink-900);
+  --color-ink-soft: var(--ink-600);
+  --color-ink-faint: var(--ink-400);
+  --color-rule: var(--ink-200);
+  --color-line: var(--ink-900); /* cartoon outlines */
+  --color-cover: var(--cobalt-700); /* bookcloth on the spine and board edges */
+  --color-accent: var(--lime-400);
+  --color-ribbon: var(--raspberry-500);
+  --color-band: var(--ink-900);
+  --color-screen: var(--lcd-200);
+
+  /* Desk objects, lit from the top left: base, -shade (away from the light), -light (toward it). */
+  --color-china: var(--paper-50);
+  --color-china-shade: var(--paper-200);
+  --color-china-light: var(--paper-0);
+  --color-coffee: var(--espresso-800);
+  --color-coffee-light: var(--espresso-400);
+  --color-coffee-stain: rgb(90 50 20 / 0.28);
+  --color-crema: var(--crema-300);
+  --color-steam: var(--paper-50);
+  --color-pen: var(--raspberry-500);
+  --color-pen-shade: var(--raspberry-700);
+  --color-pen-light: var(--raspberry-300);
+  --color-metal: var(--steel-300);
+  --color-metal-shade: var(--steel-500);
+  --color-metal-light: var(--steel-100);
+  --color-postit: var(--butter-300);
+  --color-postit-shade: var(--butter-500);
+  --color-bag: var(--raspberry-500);
+  --color-bag-shade: var(--raspberry-700);
+  --color-bag-light: var(--raspberry-300);
+  --color-chip: var(--gold-300);
+  --color-chip-shade: var(--gold-500);
+  --color-chip-light: var(--gold-100);
+  --color-cat: var(--tabby-400);
+  --color-cat-shade: var(--tabby-600);
+  --color-cat-light: var(--tabby-200);
+  --color-cat-stripe: var(--tabby-700);
+
+  /* Sticky-note colours. Chapters pick one by name in content/book.js. */
+  --note-lime: var(--lime-400);
+  --note-blue: var(--azure-200);
+  --note-pink: var(--raspberry-200);
+  --color-endpaper-wash: color-mix(in oklab, var(--color-page) 72%, transparent); /* pales the tile pattern inside the covers */
+  /* Each chapter's pages (and their tab) are paper tinted with the chapter's colour. */
+  --color-page-lime: color-mix(in oklab, var(--color-page) 78%, var(--note-lime));
+  --color-page-blue: color-mix(in oklab, var(--color-page) 72%, var(--note-blue));
+  --color-page-pink: color-mix(in oklab, var(--color-page) 74%, var(--note-pink));
+  --note-pink-shade: color-mix(in oklab, var(--note-pink) 72%, var(--color-coffee)); /* the pink sticky note's curled corner */
+
+  --font-display: var(--family-grotesque); /* the cover name and the music player's screen */
+  --font-hand: var(--family-shantell);     /* everything else: page text, tabs, notes, numbers */
+
+  /* Motion: one calm curve for page turns, one quick ease-out for UI. The turn curve must stay
+     symmetric: the stacking order of sheets swaps at 50% of the time, when a sheet is edge-on. */
+  --ease-turn: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  --ease-step: step-end;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-ui: 200ms;
+  --dur-turn: 650ms;
+  --turn-stagger: 45ms; /* delay between sheets during a chapter jump */
+  --dur-settle: 600ms; /* the email highlight when the contact page opens */
+
+  /* Idle loops on the desk and the cover star. They always run, even under reduced motion. */
+  --ease-loop: ease-in-out;
+  --ease-spin: linear;
+  --dur-steam-rise: 4.5s;
+  --dur-steam-sway: 2.2s;
+  --dur-latte: 90s;
+  --dur-eq: 0.45s;
+  --dur-track: 40s;        /* one song on the music player */
+  --dur-tail: 3.6s;
+  --dur-tail-lag: 0.45s;   /* each tail segment sways this much after the one below */
+  --dur-tail-swish: 1.2s;
+  --dur-star: 24s;
+
+  /* One light from the top left for everything: shadows fall down-right (x:y = 1:2) and are
+     tinted with the desk's brown. Objects get a tight contact shadow plus a soft ambient one;
+     use --drop-object on SVG art (follows the drawn shape), --shadow-object on boxes. */
+  --shadow-object: 0.15vmin 0.3vmin 0.1vmin rgb(60 30 10 / 0.35), 0.5vmin 1vmin 1.6vmin rgb(60 30 10 / 0.22);
+  --drop-object: drop-shadow(0.15vmin 0.3vmin 0.1vmin rgb(60 30 10 / 0.35)) drop-shadow(0.5vmin 1vmin 1.6vmin rgb(60 30 10 / 0.22));
+  --shadow-block: 0.4vmin 0.8vmin 0.2vmin rgb(60 30 10 / 0.25), 1vmin 2vmin 4vmin rgb(60 30 10 / 0.25); /* the book */
+  --shadow-photo: 0.1em 0.2em 0.35em rgb(60 30 10 / 0.25);  /* prints taped on a page */
+  --color-leaf-edge: rgb(60 30 10 / 0.5); /* the thin drawn edge of a leaf of paper */
+  --edge-leaf: drop-shadow(0.8px 0 0 var(--color-leaf-edge)) drop-shadow(-0.8px 0 0 var(--color-leaf-edge)) drop-shadow(0 0.8px 0 var(--color-leaf-edge)) drop-shadow(0 -0.8px 0 var(--color-leaf-edge));
+  --radius-page: 3px;
+
+  /* The book: gutter shading, the shade on a turning page, the shadow it casts on the page below. */
+  --color-shade-gutter: rgb(60 30 10 / 0.1);
+  --color-shade-free: rgb(60 30 10 / 0.3);
+  --color-shade-cast-start: rgb(60 30 10 / 0.26);
+  --color-shade-cast-end: rgb(60 30 10 / 0.06);
+  /* Paper grain: fine noise over the page colour. */
+  --texture-paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  /* Light and shade drawn as flat overlays. */
+  --color-desk-light: rgb(255 236 210 / 0.22);   /* warm overhead light on the desk */
+  --color-desk-vignette: rgb(40 20 5 / 0.4);
+  --color-shine-strong: rgb(255 255 255 / 0.7);  /* player rim */
+  --color-inset-shade: rgb(0 0 0 / 0.15);        /* player screen */
+  --color-inset-shade-soft: rgb(0 0 0 / 0.12);   /* player wheel */
+  --color-cover-dark: rgb(0 0 0 / 0.25);         /* cover spine and inner shade */
+  --color-cover-edge: rgb(0 0 0 / 0.3);
+  --color-cover-shine: rgb(255 255 255 / 0.2);
+  --color-cover-gloss: rgb(255 255 255 / 0.22);
+  --color-cover-gloss-faint: rgb(255 255 255 / 0.08);
+  --color-cover-rim: rgb(255 255 255 / 0.25);
+  --color-band-sheen: color-mix(in oklab, var(--color-band), var(--paper-0) 20%);
+  --color-band-shadow: rgb(0 0 0 / 0.35);
+  --color-band-shadow-soft: rgb(0 0 0 / 0.2);
+
+  /* Plank seams: a dark groove with a light lip below it, every 22% of the screen height. */
+  --texture-planks: repeating-linear-gradient(180deg, transparent 0 calc(22vh - 3px), rgb(70 40 18 / 0.45) calc(22vh - 3px) calc(22vh - 1px), rgb(255 230 200 / 0.18) calc(22vh - 1px) 22vh);
+
+  /* Oak desk top: long horizontal grain from stretched noise. */
+  --texture-wood: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='600'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.0035 0.11' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.31 0 0 0 0 0.19 0 0 0 0 0.1 1.7 0 0 0 -0.72'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+
+  /* Portuguese azulejo tile for the covers: cobalt rosette on glazed white;
+     the corner quarter-discs join into circles across tiles. */
+  --texture-azulejo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23f4f1ea'/%3E%3Cdefs%3E%3Cpath id='p' d='M40 13C47 23 47 29 40 33C33 29 33 23 40 13Z'/%3E%3Cpath id='s' d='M40 24C43 28 43 31 40 33C37 31 37 28 40 24Z'/%3E%3Cpath id='c' d='M0 0H15A15 15 0 0 1 0 15Z'/%3E%3C/defs%3E%3Cg fill='%231f3f8f'%3E%3Cuse href='%23p'/%3E%3Cuse href='%23p' transform='rotate%2890 40 40%29'/%3E%3Cuse href='%23p' transform='rotate%28180 40 40%29'/%3E%3Cuse href='%23p' transform='rotate%28270 40 40%29'/%3E%3Cuse href='%23s' transform='rotate%2845 40 40%29'/%3E%3Cuse href='%23s' transform='rotate%28135 40 40%29'/%3E%3Cuse href='%23s' transform='rotate%28225 40 40%29'/%3E%3Cuse href='%23s' transform='rotate%28315 40 40%29'/%3E%3Cuse href='%23c'/%3E%3Cuse href='%23c' transform='rotate%2890 40 40%29'/%3E%3Cuse href='%23c' transform='rotate%28180 40 40%29'/%3E%3Cuse href='%23c' transform='rotate%28270 40 40%29'/%3E%3Ccircle cx='40' cy='40' r='5'/%3E%3C/g%3E%3Cg fill='none' stroke='%231f3f8f' stroke-width='1.6'%3E%3Cpath d='M40 3L77 40L40 77L3 40Z'/%3E%3Ccircle cx='40' cy='40' r='22'/%3E%3C/g%3E%3Ccircle cx='40' cy='40' r='2' fill='%23f4f1ea'/%3E%3Crect x='0.4' y='0.4' width='79.2' height='79.2' fill='none' stroke='%23d8d1c2' stroke-width='0.8'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-ui: 0ms; /* UI transitions only; the page turn always plays (it is the book) */
+  }
+}

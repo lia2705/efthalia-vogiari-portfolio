@@ -1,0 +1,63 @@
+/* A slim paper slip lying on the desk below the book, above a page swinging over it. */
+.nav {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: min(24rem, 90vw);
+  height: 2.25rem;
+  padding-inline: 0.35rem 0.35rem;
+  border: 1px solid var(--color-line);
+  border-radius: 99px;
+  background: var(--color-page);
+  box-shadow: var(--shadow-object);
+  color: var(--color-ink);
+}
+
+.nav__strip {
+  display: flex;
+  flex: 1;
+  gap: 3px;
+  padding: 0;
+  list-style: none;
+}
+.nav__strip li { display: flex; }
+.nav__strip button {
+  position: relative;
+  flex: 1;
+  height: 0.45rem;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: 99px;
+  background: var(--color-page-under);
+  transition: scale var(--dur-ui) var(--ease-out);
+}
+.nav__strip button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--note);
+  scale: var(--fill) 1;
+  transform-origin: left;
+  transition: scale var(--dur-turn) var(--ease-turn);
+}
+.nav__strip button:hover { scale: 1 1.5; }
+
+.nav__count {
+  min-width: 2.6rem;
+  font: 700 1.1rem / 1 var(--font-hand);
+  text-align: center;
+  color: var(--color-ink-soft);
+}
+
+.nav__arrow {
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  font-size: 1rem;
+  transition: background-color var(--dur-ui) var(--ease-out), opacity var(--dur-ui) var(--ease-out);
+}
+.nav__arrow:hover:not(:disabled) { background: var(--color-page-edge); }
+.nav__arrow:disabled { opacity: 0.3; cursor: default; }

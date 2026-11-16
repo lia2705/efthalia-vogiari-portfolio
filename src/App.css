@@ -1,0 +1,26 @@
+/* The scene: a desk, the book centred on it, the page strip below. One landscape layout on every
+   screen (phones are read sideways). --page-w (the book) and --desk-w (every desk object) live
+   here, so they scale together. */
+
+.scene {
+  --page-ratio: 0.7; /* width / height of one page */
+  --page-w: min(35vw, (100dvh - 6.5rem) * var(--page-ratio)); /* leaves 15vw of desk per side: room for 14px notes */
+  /* Desk objects fit the strip of desk left beside the book (and never outgrow the book). */
+  --desk-w: min(var(--page-w) * 0.75, (100vw - var(--page-w) * 2) * 0.72);
+
+  display: grid;
+  grid-template-rows: 1fr auto;
+  justify-items: center; /* the nav slip; .stage stretches itself */
+  height: 100dvh;
+  padding-bottom: 0.9rem;
+  isolation: isolate; /* the desk's z-index: -1 stays inside the scene */
+}
+
+.stage {
+  position: relative;
+  justify-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
