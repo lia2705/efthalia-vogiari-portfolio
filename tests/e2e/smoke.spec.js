@@ -3,12 +3,12 @@
 import { test, expect } from '@playwright/test'
 
 test('the book loads, fits, turns and navigates', async ({ page }) => {
-  test.setTimeout(60_000) // CI machines render without a GPU
+  test.setTimeout(90_000) // CI machines render without a GPU
   const errors = []
   page.on('pageerror', (error) => errors.push(error.message))
   page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()) })
   const count = page.locator('.nav__count')
-  const settled = () => expect(page.locator('.book')).not.toHaveAttribute('data-turn', /.*/)
+  const settled = () => expect(page.locator('.book')).not.toHaveAttribute('data-turn', /.*/, { timeout: 20_000 })
 
   await page.goto('/')
   await page.evaluate(() => document.fonts.ready)
