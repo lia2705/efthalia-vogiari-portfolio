@@ -155,7 +155,7 @@ export const book = {
         {
           type: 'project', title: 'VR Flightstick Locomotion',
           line: 'Interaction Technique Development',
-          video: { src: 'https://www.youtube-nocookie.com/embed/EOAJQPKAQLw?autoplay=1', poster: `${import.meta.env.BASE_URL}media/3dui/flightstick.png`, label: 'VR Flightstick Locomotion project video' },
+          video: { src: 'https://www.youtube-nocookie.com/embed/NkY0-KbnjNI?autoplay=1', poster: `${import.meta.env.BASE_URL}media/3dui/flightstick.png`, label: 'VR Flightstick Locomotion project video' },
           bullets: [
             ['About', 'Developed a VR locomotion technique that uses intuitive hand tilting with a physical controller to control movement direction and speed.'],
             ['Project', 'Group Project · VR Game'],
@@ -164,14 +164,13 @@ export const book = {
         },
         {
           type: 'project', title: 'VR Movie Director',
-          line: 'Multimodal Interfaces, master’s team project',
-          photos: [img('mmi/01.webp', 'VR Movie Director virtual film set and interface')],
+          line: 'VR Multimodal Interface',
+          video: { src: 'https://www.youtube-nocookie.com/embed/9WwMWBn8qfY?autoplay=1', poster: `${import.meta.env.BASE_URL}media/mmi/01.webp`, label: 'VR Movie Director project video' },
           bullets: [
-            ['About', 'Direct a virtual film scene by talking and pointing.'],
+            ['About', 'Developed an immersive VR experience that lets users direct a virtual film set by manipulating lighting and props through voice commands and hand gestures.'],
             ['Project', 'Group Project · Multimodal Interfaces'],
-            ['My work', 'With Nico: commands with two pointing gestures, several ways to say each command, and a reusable package that joins speech and pointing.'],
           ],
-          role: 'Multimodal interaction and team development', tools: 'Unity',
+          role: 'Game Concept, multimodal implementation', tools: 'Unity, Blender',
         },
       ],
     },
