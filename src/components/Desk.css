@@ -161,21 +161,6 @@
   background: var(--note-pink);
   rotate: 4deg;
 }
-/* The bottom corner curls up off the desk. */
-.postit::after {
-  content: '';
-  position: absolute;
-  right: -1px;
-  bottom: -1px;
-  width: 14%;
-  aspect-ratio: 1;
-  background: linear-gradient(135deg, var(--color-postit-shade) 50%, var(--color-desk) 50%);
-  border-top: 1px solid var(--color-line);
-  border-left: 1px solid var(--color-line);
-  border-radius: 0 0 0 30%;
-}
-.postit + .postit::after { background: linear-gradient(135deg, var(--note-pink-shade) 50%, var(--color-desk) 50%); }
-
 .clip { filter: var(--drop-object); }
 .clip__edge { fill: none; stroke: var(--color-line); stroke-width: 5.6; stroke-linecap: round; }
 .clip__wire { fill: none; stroke: var(--color-metal-light); stroke-width: 2.6; stroke-linecap: round; }
@@ -190,7 +175,7 @@
 /* ── Music player with earphones, right ────────────────────────── */
 
 .music {
-  top: calc(var(--desk-w) * -0.04); /* above the tabs */
+  top: calc(var(--desk-w) * 0.02);
   left: calc(100% + var(--desk-w) * 0.22);
   display: flex;
   flex-direction: column;

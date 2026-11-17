@@ -165,7 +165,8 @@
   aspect-ratio: var(--ratio);
   overflow: hidden;
 }
-.photo img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.photo img,
+.photo video { display: block; width: 100%; height: 100%; object-fit: contain; }
 .photo__video { position: relative; }
 .photo__video iframe { width: 100%; height: 100%; border: 0; }
 .photo__play { position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; }
@@ -189,6 +190,18 @@
 .page--project .photos[data-count='2'] { --cols: 2; }
 .page--process .photos[data-count='2'] { flex-direction: column; align-items: center; }
 .page--gallery .photos[data-count='3'] { --cols: 3; }
+.page--gallery[data-collage] .photos { --cols: 3; --photo-gap: 2cqi; }
+.page--gallery:has(video) .group:nth-of-type(2) .photos { --photo-gap: 5cqi; }
+.page--gallery[data-collage] .photo { max-height: none; }
+.page--gallery[data-collage] .photo__image { flex: none; width: var(--w); height: auto; }
+.page--gallery[data-collage] .group + .group .photos { margin-top: -3cqi; }
+.page--gallery[data-collage]:not(:has(video)) .photos { --w: calc((100cqi - 2 * var(--edge) - 2 * var(--photo-gap)) * 0.3 - 2 * var(--pad)); }
+.page--gallery[data-collage]:not(:has(video)) .group + .group .photos { margin-top: 5cqi; }
+.page--gallery[data-collage] .photo:nth-child(1) { rotate: -4deg; }
+.page--gallery[data-collage] .photo:nth-child(2) { rotate: 3deg; translate: -1cqi 1cqi; }
+.page--gallery[data-collage] .photo:nth-child(3) { rotate: -3deg; translate: 1cqi 0; }
+.page--gallery:has(video) .group:nth-of-type(2) .photo:nth-child(2) { translate: -1cqi 16cqi; }
+.page--gallery:has(video) .group:nth-of-type(3) .photo:nth-child(2) { translate: -1cqi 25cqi; }
 .page--project .photos[data-count='4'],
 .page--project .photos[data-count='5'] {
   --cols: 2;

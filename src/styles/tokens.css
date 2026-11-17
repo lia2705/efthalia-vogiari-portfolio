@@ -104,7 +104,6 @@
   --color-page-lime: color-mix(in oklab, var(--color-page) 78%, var(--note-lime));
   --color-page-blue: color-mix(in oklab, var(--color-page) 72%, var(--note-blue));
   --color-page-pink: color-mix(in oklab, var(--color-page) 74%, var(--note-pink));
-  --note-pink-shade: color-mix(in oklab, var(--note-pink) 72%, var(--color-coffee)); /* the pink sticky note's curled corner */
 
   --font-display: var(--family-grotesque); /* the cover name and the music player's screen */
   --font-hand: var(--family-shantell);     /* everything else: page text, tabs, notes, numbers */

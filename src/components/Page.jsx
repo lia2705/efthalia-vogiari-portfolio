@@ -1,8 +1,8 @@
 /* One page of the book. `page.type` (set in content/book.js) picks a layout.
    Each layout shows one page heading (h2) at most, with nothing stacked above it.
-   Photos are prints taped in, scrapbook style. */
+   Photos and videos are prints taped in, scrapbook style. */
 
-import { memo, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import './Page.css'
 import de from '../assets/flags/de.svg'
 import gr from '../assets/flags/gr.svg'
@@ -33,8 +33,10 @@ const Flag = ({ code }) => <img className="flag" src={FLAGS[code]} alt="" />
 // The image wrapper clips the crop without clipping the tape or caption.
 // The print's width/height is a fact about the image: CSS sizes the frame from it, so a print is as
 // tall as its image needs, in whole rows, and the page text keeps its place on the ruled lines.
-function Photo({ src, alt, caption }) {
-  const [ratio, setRatio] = useState()
+function Photo({ src, alt, caption, video, inert }) {
+  const [ratio, setRatio] = useState(video ? 9 / 16 : undefined)
+  const player = useRef(null)
+  useEffect(() => { if (inert) player.current?.pause() }, [inert])
   const ready = (img) => {
     if (!img?.naturalWidth) return
     setRatio(img.naturalWidth / img.naturalHeight)
@@ -43,16 +45,18 @@ function Photo({ src, alt, caption }) {
   return (
     <figure className="photo" style={ratio && { '--print-ratio': ratio }}>
       <div className="photo__image">
-        <img ref={ready} onLoad={(e) => ready(e.currentTarget)} src={src} alt={alt} loading="eager" decoding="async" />
+        {video
+          ? <video ref={player} src={src} aria-label={alt} controls muted preload="metadata" playsInline />
+          : <img ref={ready} onLoad={(e) => ready(e.currentTarget)} src={src} alt={alt} loading="eager" decoding="async" />}
       </div>
       {caption && <figcaption>{caption}</figcaption>}
     </figure>
   )
 }
 
-const Photos = ({ items }) => (
+const Photos = ({ items, inert }) => (
   <div className="photos" data-count={items.length}>
-    {items.map((p) => <Photo key={p.src} {...p} />)}
+    {items.map((p) => <Photo key={p.src} {...p} inert={inert} />)}
   </div>
 )
 
@@ -166,13 +170,13 @@ const layouts = {
     </>
   ),
 
-  gallery: ({ title, groups }) => (
+  gallery: ({ title, groups, inert }) => (
     <>
       <h2 className="title">{title}</h2>
-      {groups.map((g) => (
-        <section key={g.line} className="group">
+      {groups.map((g, index) => (
+        <section key={g.line || index} className="group">
           {g.line && <p className="line">{g.line}</p>}
-          <Photos items={g.photos} />
+          <Photos items={g.photos} inert={inert} />
         </section>
       ))}
     </>
@@ -220,6 +224,7 @@ const Page = memo(function Page({ page, inert }) {
     <article
       className={`page page--${page.type}`}
       data-side={side}
+      data-collage={page.collage || undefined}
       data-open={!inert || undefined}
       style={page.chapter && { '--chapter': `var(--note-${page.chapter.note})` }}
       inert={inert}

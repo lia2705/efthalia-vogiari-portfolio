@@ -21,6 +21,7 @@ test('the book loads, fits, turns and navigates', async ({ page }) => {
       Math.abs(cup.y + cup.height / 2 - art.y - art.height / 2) < 2
   })
   expect(coffeeAligned, 'latte art stays centred in the cup').toBe(true)
+  expect(await page.locator('.page--gallery video').evaluateAll((videos) => videos.length === 2 && videos.every((video) => video.muted))).toBe(true)
 
   // Every page is mounted, so all of them can be measured without turning.
   const overflowing = await page.evaluate(() => [...document.querySelectorAll('.page')]

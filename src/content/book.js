@@ -46,7 +46,7 @@ export const book = {
             { when: '2023-25', what: 'UX intern, then working student', where: 'Bosch Digital', kind: 'work', detail: 'UX design for digital products' },
             { when: '2025', what: 'Bachelor’s thesis on AR', where: 'Bosch Digital', kind: 'study', detail: 'AR concepts, prototypes and user studies' },
             { when: '2026', what: 'Master’s in HCI', where: 'University of Würzburg', kind: 'study', now: true },
-            { when: '2026', what: 'Accessibility and UX', where: 'BearingPoint', detail: 'Making digital products accessible', kind: 'work', now: true },
+            { when: '2026', what: 'Working student Accessibility & UX', where: 'BearingPoint', detail: 'Making digital products accessible', kind: 'work', now: true },
           ],
         },
       ],
@@ -182,24 +182,37 @@ export const book = {
       note: 'pink',
       pages: [
         {
-          type: 'gallery', title: 'Social media',
+          type: 'gallery', title: 'Social media', collage: true,
           groups: [
-            { line: '2024-25: I ran ESN Stuttgart’s social media.', photos: [
-              img('social/01.webp', 'Halloween party poster'), img('social/02.webp', 'Traffic light party poster'), img('social/06.webp', 'ESNcard explainer post'),
+            { line: 'As Communication Manager of ESN Stuttgart, I ran their social media accounts and led the communications team.', photos: [
+              img('social/01.webp', 'Halloween party poster'), { src: `${import.meta.env.BASE_URL}media/social/airball.mp4`, alt: 'ESN airball video', video: true }, img('social/06.webp', 'ESNcard explainer post'),
             ] },
             { line: '', photos: [
               img('social/07.webp', 'Welcome week social media post'), img('social/08.webp', 'Welcome week party poster'), img('social/09.webp', 'Event calendar'),
             ] },
+            { line: '', photos: [
+              img('social/02.webp', 'Traffic light party poster'),
+              img('social/welcome-week.png', 'Welcome Week event schedule'),
+              { src: `${import.meta.env.BASE_URL}media/social/welcome-story.mp4`, alt: 'ESN Welcome Week story video', video: true },
+            ] },
           ],
         },
         {
-          type: 'gallery', title: 'Through my lens',
+          type: 'gallery', title: 'Through my lens', collage: true,
           groups: [
-            { line: 'Small details, city streets and places I’ve travelled to.', photos: [
-              img('photo/07.webp', 'Neon-lit Korean shopfront at night'), img('photo/09.webp', 'Coastal cliffs and town from above'), img('photo/12.webp', 'Silhouetted street at sunset'),
+            { line: 'A personal collection of photographs reflecting my interest in capturing everyday moments, places, and perspectives.', photos: [
+              img('photo/photo-0380.jpg', 'Deer peeking between stone lanterns'),
+              img('photo/07.webp', 'Neon-lit Korean shopfront at night'),
+              img('photo/photo-1104.jpg', 'Garden gate beneath autumn leaves'),
             ] },
             { line: '', photos: [
-              img('photo/collection.webp', 'A collection of travel and street photography'),
+              img('photo/photo-4783.jpg', 'Sunset beside a geometric structure'),
+              img('photo/09.webp', 'Coastal cliffs and town from above'),
+              img('photo/photo-7803.jpg', 'Street with signs and hanging lanterns'),
+            ] },
+            { line: '', photos: [
+              img('photo/photo-9588.jpg', 'People passing illuminated shops at night'),
+              img('photo/photo-7473.jpg', 'Silhouetted pedestrians at sunset'),
             ] },
           ],
         },
@@ -217,7 +230,7 @@ export const book = {
           title: 'Skills',
           groups: [
             ['Tools', ['Figma', 'Affinity', 'Miro', 'Canva', 'Blender', 'Unity']],
-            ['Programming', ['Python', 'JavaScript', 'Java', 'Swift', 'HTML', 'CSS']],
+            ['Programming', ['Python', 'JavaScript', 'Java', 'C#', 'Swift', 'HTML', 'CSS']],
             ['Accessibility', ['WCAG', 'BITV 2.0', 'EN 301 549']],
           ],
           languages: [
@@ -237,5 +250,5 @@ export const book = {
     },
   ],
 
-  back: { line: 'Thanks for reading.' },
+  back: { line: 'Thanks for reading :)' },
 }

@@ -3,9 +3,13 @@ export const playlist = [
   { title: 'DtMF', artist: 'Bad Bunny' },
   { title: 'greedy', artist: 'Tate McRae' },
   { title: 'Golden', artist: 'Harry Styles' },
+  { title: 'Einmal um die Welt', artist: 'CRO' },
+  { title: 'Wellen (Liebe und Musik)', artist: 'SHIMMER.' },
   { title: 'Tití Me Preguntó', artist: 'Bad Bunny' },
   { title: 'Sports car', artist: 'Tate McRae' },
   { title: 'As It Was', artist: 'Harry Styles' },
+  { title: 'Traum', artist: 'CRO' },
+  { title: 'Jemand der vermisst', artist: 'SHIMMER.' },
 ]
 
 // Lia's sticky notes, in her own plain words: a title, then one short item per line (the notes are
