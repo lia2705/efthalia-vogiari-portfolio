@@ -62,23 +62,6 @@
 .nav__arrow:hover:not(:disabled) { background: var(--color-page-edge); }
 .nav__arrow:disabled { opacity: 0.3; cursor: default; }
 
-.nav__controls { display: flex; align-items: center; gap: 0.6rem; width: min(32rem, 96vw); }
-.nav__controls .nav { min-width: 0; flex: 1; }
-.nav__motion {
-  padding: 0.35rem 0.7rem;
-  border: 1px solid var(--color-line);
-  border-radius: 99px;
-  background: var(--color-page);
-  box-shadow: var(--shadow-object);
-  color: var(--color-ink);
-  font: 700 0.85rem / 1.2 var(--font-hand);
-  cursor: pointer;
-}
-.nav__motion-state { margin-left: 0.25rem; font-weight: 700; }
-.nav__motion[aria-pressed='true'] { background: var(--color-accent); }
-.nav__motion[aria-pressed='false'] .nav__motion-state { color: var(--color-ink-soft); }
-.nav__motion:disabled { opacity: 0.5; cursor: default; }
-
 [data-reduced-motion] .nav__strip button,
 [data-reduced-motion] .nav__strip button::after,
 [data-reduced-motion] .nav__arrow { transition: none; }

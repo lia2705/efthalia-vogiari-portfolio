@@ -24,3 +24,21 @@
   justify-content: center;
   min-height: 0;
 }
+
+/* Compact control for the site's animation preference. */
+.scene__motion {
+  position: fixed;
+  z-index: 2;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  aspect-ratio: 1;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  background: var(--color-page);
+  box-shadow: var(--shadow-object);
+  color: var(--color-ink);
+  font-size: 1rem;
+}

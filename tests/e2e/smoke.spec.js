@@ -22,6 +22,7 @@ test('the book loads, fits, turns and navigates', async ({ page }) => {
   })
   expect(coffeeAligned, 'latte art stays centred in the cup').toBe(true)
   expect(await page.locator('.page--gallery video').evaluateAll((videos) => videos.length === 2 && videos.every((video) => video.muted))).toBe(true)
+  await expect(page.locator('.page--gallery .photo__play')).toHaveCount(2)
 
   // Every page is mounted, so all of them can be measured without turning.
   const overflowing = await page.evaluate(() => [...document.querySelectorAll('.page')]
@@ -45,9 +46,9 @@ test('the book loads, fits, turns and navigates', async ({ page }) => {
   await expect(count).toHaveText(/^9 \//)
 
   await settled()
-  const motion = page.getByRole('button', { name: 'Reduce motion' })
+  const motion = page.getByRole('button', { name: 'Animations' })
   await motion.click()
-  await expect(motion).toHaveAttribute('aria-pressed', 'true')
+  await expect(motion).toHaveAttribute('aria-pressed', 'false')
   await page.getByRole('button', { name: 'Next page', exact: true }).click()
   await expect(count).toHaveText(/^11 \//)
   await expect(page.locator('.book')).not.toHaveAttribute('data-turn', /.*/)
@@ -58,12 +59,19 @@ test('the book loads, fits, turns and navigates', async ({ page }) => {
   await expect(video).toHaveCount(1)
   await page.getByRole('button', { name: 'Next page', exact: true }).click()
   await expect(video).toHaveCount(0)
+  await page.evaluate(() => { location.hash = '13' })
+  await expect(count).toHaveText(/^13 \//)
+  const esnVideo = page.getByLabel('ESN airball video', { exact: true })
+  await page.getByRole('button', { name: 'Play ESN airball video' }).click()
+  await expect(esnVideo).toHaveJSProperty('paused', false)
+  await page.getByRole('button', { name: 'Next page', exact: true }).click()
+  await expect(esnVideo).toHaveJSProperty('paused', true)
   await page.reload()
-  await expect(motion).toHaveAttribute('aria-pressed', 'true')
+  await expect(motion).toHaveAttribute('aria-pressed', 'false')
   await page.evaluate(() => localStorage.removeItem('reduce-motion'))
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.reload()
-  await expect(motion).toHaveAttribute('aria-pressed', 'true')
+  await expect(motion).toHaveAttribute('aria-pressed', 'false')
 
   expect(errors).toEqual([])
 })

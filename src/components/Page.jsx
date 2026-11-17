@@ -36,6 +36,7 @@ const Flag = ({ code }) => <img className="flag" src={FLAGS[code]} alt="" />
 function Photo({ src, alt, caption, video, inert }) {
   const [ratio, setRatio] = useState(video ? 9 / 16 : undefined)
   const player = useRef(null)
+  const [playing, setPlaying] = useState(false)
   useEffect(() => { if (inert) player.current?.pause() }, [inert])
   const ready = (img) => {
     if (!img?.naturalWidth) return
@@ -45,9 +46,12 @@ function Photo({ src, alt, caption, video, inert }) {
   return (
     <figure className="photo" style={ratio && { '--print-ratio': ratio }}>
       <div className="photo__image">
-        {video
-          ? <video ref={player} src={src} aria-label={alt} controls muted preload="metadata" playsInline />
-          : <img ref={ready} onLoad={(e) => ready(e.currentTarget)} src={src} alt={alt} loading="eager" decoding="async" />}
+        {video ? <>
+          <video ref={player} src={src} aria-label={alt} controls muted preload="metadata" playsInline
+            onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} />
+          {!playing && <button className="photo__play" type="button" aria-label={`Play ${alt}`}
+            onClick={() => { player.current?.play().catch(() => {}) }}><span aria-hidden="true">▶</span></button>}
+        </> : <img ref={ready} onLoad={(e) => ready(e.currentTarget)} src={src} alt={alt} loading="eager" decoding="async" />}
       </div>
       {caption && <figcaption>{caption}</figcaption>}
     </figure>

@@ -34,7 +34,7 @@ One owner per responsibility. Data flows one way: content, then layout, then rea
 2. `Book.jsx` renders once for the target: `--page`, `--target`, `--last`, `--count` and `data-turn` (`fwd` or `back`) on `.book`; `--order` and `data-turning` on each turning sheet; `data-cast` on the two pages beside the turn.
 3. CSS plays the turn (`Book.css`). Each turning sheet rotates about the spine (`rotateY`), delayed by its order in a chapter jump, with its stacking order swapped once at 50%. One set of keyframes describes a turn forward; a turn back plays them in reverse. The face turning away darkens; a shadow falls on the page it uncovers and on the one it lands on. Each chapter's first page carries its tab on both faces of its sheet, so the tab turns with it.
 4. The book's own `centre` animation ends last on every move, and `Book` calls `finish()` from its `animationend`. The resting styles equal the last frame, so nothing jumps.
-5. The Reduce motion control selects direct page changes and stops decorative loops. The choice is saved locally; without a saved choice, the system preference applies.
+5. The animation control in the top-right corner selects direct page changes and stops decorative loops. The choice is saved locally; without a saved choice, the system preference applies.
 
 ### The page grid
 
