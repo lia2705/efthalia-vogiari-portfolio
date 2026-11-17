@@ -114,30 +114,31 @@ const layouts = {
     </>
   ),
 
-  project: ({ title, line, photos, bullets, role, tools }) => (
+  project: ({ title, line, photos, bullets, role, tools, process }) => (
     <>
       <h2 className="title">{title}</h2>
       <p className="line">{line}</p>
       <Photos items={photos} />
-      <dl className="facts">
+      <dl className="facts facts--spaced">
         {bullets.map(([label, text]) => <div key={label}><dt>{label}</dt><dd>{text}</dd></div>)}
       </dl>
       <dl className="facts facts--meta">
         <div><dt>Role</dt><dd>{role}</dd></div>
         <div><dt>Tools</dt><dd>{tools}</dd></div>
       </dl>
+      {process && <p className="process__findings"><strong>Process &amp; Findings</strong><br />{process}</p>}
     </>
   ),
 
   // Shared by the facing pages of longer case studies: evidence first,
   // followed by concise steps and an optional study limitation.
-  process: ({ title, line, description, photos, steps, note }) => (
+  process: ({ title, line, description, photos, steps, note, spaced }) => (
     <>
       {title && <h2 className="title">{title}</h2>}
       {line && <p className="line">{line}</p>}
       {description && <p className="process__description">{description}</p>}
       {photos?.length > 0 && <Photos items={photos} />}
-      {steps?.length > 0 && <ol className="process">
+      {steps?.length > 0 && <ol className={`process${spaced ? ' process--spaced' : ''}`}>
         {steps.map(([label, text]) => <li key={label}><strong>{label}</strong><span>{text}</span></li>)}
       </ol>}
       {note && <p className="process__note">{note}</p>}
