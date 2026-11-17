@@ -6,19 +6,21 @@ import { spreadOf } from './layout.js'
    and Book calls finish() when its animation ends. */
 const fromHash = (last) => Math.min(last, Math.max(0, Number.parseInt(location.hash.slice(1), 10) || 0))
 
-export function useBook(last) {
+export function useBook(last, reduced) {
   const [reading, setReading] = useState(() => ({ page: fromHash(last), target: fromHash(last) }))
   const go = useCallback((target) => setReading((state) => {
     if (state.page !== state.target) return state
-    return { ...state, target: Math.min(last, Math.max(0, target)) }
-  }), [last])
+    const next = Math.min(last, Math.max(0, target))
+    return reduced ? { page: next, target: next } : { ...state, target: next }
+  }), [last, reduced])
   // A turn moves by a spread: to the left page of the next or previous spread.
   const turn = useCallback((direction) => setReading((state) => {
     if (state.page !== state.target) return state
     const spread = spreadOf(state.page)
     const target = direction > 0 ? 2 * spread + 1 : 2 * spread - 3
-    return { ...state, target: Math.min(last, Math.max(0, target)) }
-  }), [last])
+    const next = Math.min(last, Math.max(0, target))
+    return reduced ? { page: next, target: next } : { ...state, target: next }
+  }), [last, reduced])
   // A click on the right page turns forward, on the left page back.
   const flip = useCallback((side) => turn(side === 'front' ? 1 : -1), [turn])
   const finish = useCallback(() => setReading((state) => ({ page: state.target, target: state.target })), [])

@@ -180,6 +180,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --dur-ui: 0ms; /* UI transitions only; the page turn always plays (it is the book) */
+    --dur-ui: 0ms; /* UI transitions */
   }
 }

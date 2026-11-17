@@ -57,7 +57,7 @@ export default function Book({ pages, chapters, page, target, onFinish, onGo, on
               <div className="book__surface" data-exposed={exposed || turning || undefined}
                 data-cover={isCover(content) || undefined}
                 data-cast={under ? 'under' : landing ? 'landing' : undefined}
-                onClick={(event) => { if (!moving && exposed && !event.target.closest('a, button')) onFlip(side) }}>
+                onClick={(event) => { if (!moving && exposed && !event.target.closest('a, button, iframe')) onFlip(side) }}>
                 <Page page={content} inert={moving || !exposed} />
               </div>
               {/* The tab is part of the leaf, so it is on both faces; the face turned away is inert. */}

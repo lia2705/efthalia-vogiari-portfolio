@@ -93,7 +93,7 @@ export const book = {
             img('corvus/08.webp', 'Candle-lit VR room with a body on a table'),
           ],
           bullets: [
-            ['Goal', 'A tense VR escape room that starts in a coffin.'],
+            ['About', 'A tense VR escape room that starts in a coffin.'],
             ['Project', 'Group Project · VR Escape Room'],
           ],
           role: 'Map design, 3D modelling, poster',
@@ -105,7 +105,7 @@ export const book = {
           line: 'VR Gesture Interaction Study',
           photos: [img('automotive/01.webp', 'Foot gesture interaction in a virtual car')],
           bullets: [
-            ['Goal', 'Explore the usability of foot gestures compared to hand interactions.'],
+            ['About', 'Explore the usability of foot gestures compared to hand interactions.'],
             ['Project', 'Group Project · VR Interaction Study'],
           ],
           role: 'State-of-the-Art Analysis, Gesture Concept, User Study, User Testing',
@@ -117,7 +117,7 @@ export const book = {
           line: 'A usability study',
           photos: [img('glasses/01.webp', 'Participant testing smart glasses'), img('glasses/02.webp', 'Participant using smart glasses to read a document')],
           bullets: [
-            ['Goal', 'Evaluate and compare the efficiency, effectiveness and user experience of both devices.'],
+            ['About', 'Evaluate and compare the efficiency, effectiveness and user experience of both devices.'],
             ['Approach', 'Comparative user study with 15 participants using simulated visual impairments.'],
             ['Project', 'Group Project · Usability Study'],
           ],
@@ -138,7 +138,7 @@ export const book = {
           line: 'Bachelor’s thesis',
           photos: [img('thesis/01.webp', 'Augmented reality interface concept for maintenance'), img('thesis/02.webp', 'AR maintenance thesis project image')],
           bullets: [
-            ['Goal', 'Find where AR information should appear: easy to notice, not distracting.'],
+            ['About', 'Find where AR information should appear: easy to notice, not distracting.'],
             ['Project', 'Bachelor’s Thesis · AR Research'],
           ],
           role: 'Research, interface design, prototyping and user studies', tools: 'Figma, Unity',
@@ -153,21 +153,21 @@ export const book = {
           ],
         },
         {
-          type: 'project', title: 'Ho My Board!',
-          line: '3D UI, master’s team project',
-          photos: [img('3dui/01.webp', 'Ho My Board! VR parkour project artwork', 'Project artwork')],
+          type: 'project', title: 'VR Flightstick Locomotion',
+          line: 'Interaction Technique Development',
+          video: { src: 'https://www.youtube-nocookie.com/embed/EOAJQPKAQLw?autoplay=1', poster: `${import.meta.env.BASE_URL}media/3dui/flightstick.png`, label: 'VR Flightstick Locomotion project video' },
           bullets: [
-            ['Goal', 'A VR parkour game where you ride a hoverboard.'],
+            ['About', 'Developed a VR locomotion technique that uses intuitive hand tilting with a physical controller to control movement direction and speed.'],
             ['Project', 'Group Project · VR Game'],
           ],
-          role: 'Team project', tools: 'Unity',
+          role: 'Ideation of locomotion technique, implementation', tools: 'Unity',
         },
         {
           type: 'project', title: 'VR Movie Director',
           line: 'Multimodal Interfaces, master’s team project',
           photos: [img('mmi/01.webp', 'VR Movie Director virtual film set and interface')],
           bullets: [
-            ['Goal', 'Direct a virtual film scene by talking and pointing.'],
+            ['About', 'Direct a virtual film scene by talking and pointing.'],
             ['Project', 'Group Project · Multimodal Interfaces'],
             ['My work', 'With Nico: commands with two pointing gestures, several ways to say each command, and a reusable package that joins speech and pointing.'],
           ],

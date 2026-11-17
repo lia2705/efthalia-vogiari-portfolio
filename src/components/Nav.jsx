@@ -4,11 +4,12 @@
 
 import './Nav.css'
 
-export default function Nav({ page, last, chapters, busy, onTurn, onGo }) {
+export default function Nav({ page, last, chapters, busy, onTurn, onGo, reduced, onToggleMotion }) {
   // The last matching chapter owns the current page, up to the back cover.
   const current = chapters.findLast((c) => c.page <= page && page < last)
 
   return (
+    <div className="nav__controls">
     <nav className="nav" aria-label="Pages">
       <button className="nav__arrow" onClick={() => onTurn(-1)} disabled={busy || page === 0} aria-label="Previous page">
         ←
@@ -36,5 +37,7 @@ export default function Nav({ page, last, chapters, busy, onTurn, onGo }) {
         →
       </button>
     </nav>
+    <button className="nav__motion" type="button" aria-pressed={reduced} disabled={busy} onClick={onToggleMotion}>Reduce motion <span className="nav__motion-state" aria-hidden="true">{reduced ? 'On' : 'Off'}</span></button>
+    </div>
   )
 }

@@ -66,7 +66,11 @@
 /* Latte art turns slowly with the coffee. */
 .coffee__art {
   position: absolute;
-  inset: 25%;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  height: 50%;
+  transform-origin: center;
   animation: spin var(--dur-latte) var(--ease-spin) infinite;
 }
 .coffee__art path { fill: var(--color-crema); }
@@ -393,3 +397,10 @@
   .snack,
   .cat { display: none; }
 }
+
+/* The progress animation still advances the music player. */
+[data-reduced-motion] .coffee__art,
+[data-reduced-motion] .coffee__wisp,
+[data-reduced-motion] .coffee__wisp svg,
+[data-reduced-motion] .music__eq i,
+[data-reduced-motion] .cat__segment { animation: none; }

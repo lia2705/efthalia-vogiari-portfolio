@@ -1,8 +1,7 @@
 /* Lint: React hooks, and the import boundaries that keep one owner per layer.
    content/ is data and imports nothing; components get content through props (only App.jsx
    imports it); book/ is logic with no UI and no CSS.
-   Timing belongs to CSS animations and layout to CSS, so neither requestAnimationFrame nor
-   matchMedia may be called anywhere in src/. */
+   Timing belongs to CSS animations; matchMedia reads the motion preference. */
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -18,11 +17,9 @@ export default [
     languageOptions: { globals: globals.browser, sourceType: 'module', parserOptions: { ecmaFeatures: { jsx: true } } },
     rules: {
       'no-restricted-globals': ['error',
-        { name: 'requestAnimationFrame', message: 'Timing belongs to CSS animations.' },
-        { name: 'matchMedia', message: 'Layout belongs to CSS media queries.' }],
+        { name: 'requestAnimationFrame', message: 'Timing belongs to CSS animations.' }],
       'no-restricted-properties': ['error',
-        { object: 'window', property: 'requestAnimationFrame', message: 'Timing belongs to CSS animations.' },
-        { object: 'window', property: 'matchMedia', message: 'Layout belongs to CSS media queries.' }],
+        { object: 'window', property: 'requestAnimationFrame', message: 'Timing belongs to CSS animations.' }],
     },
   },
   { files: ['*.js', '*.mjs', 'tests/**'], languageOptions: { globals: { ...globals.node, ...globals.browser } } },

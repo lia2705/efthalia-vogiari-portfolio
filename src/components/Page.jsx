@@ -56,6 +56,27 @@ const Photos = ({ items }) => (
   </div>
 )
 
+// The player is created only on request and unmounted when its page is no longer active.
+function Video({ src, poster, label }) {
+  const [playing, setPlaying] = useState(false)
+  return (
+    <div className="photos" data-count="1">
+      <figure className="photo" style={{ '--print-ratio': 16 / 9 }}>
+        <div className="photo__image photo__video">
+          {playing ? (
+            <iframe src={src} title={label} allow="autoplay; encrypted-media; picture-in-picture" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen />
+          ) : (
+            <button className="photo__play" type="button" onClick={() => setPlaying(true)} aria-label={`Play ${label}`}>
+              <img src={poster} alt="" />
+              <span aria-hidden="true">▶</span>
+            </button>
+          )}
+        </div>
+      </figure>
+    </div>
+  )
+}
+
 // Page types select presentation only; all copy and media live in content/book.js.
 const layouts = {
   cover: ({ name, line }) => (
@@ -114,11 +135,11 @@ const layouts = {
     </>
   ),
 
-  project: ({ title, line, photos, bullets, role, tools, process }) => (
+  project: ({ title, line, photos, video, inert, bullets, role, tools, process }) => (
     <>
       <h2 className="title">{title}</h2>
       <p className="line">{line}</p>
-      <Photos items={photos} />
+      {video ? <Video key={inert ? 'inactive' : 'active'} {...video} /> : <Photos items={photos} />}
       <dl className="facts facts--spaced">
         {bullets.map(([label, text]) => <div key={label}><dt>{label}</dt><dd>{text}</dd></div>)}
       </dl>
@@ -203,7 +224,7 @@ const Page = memo(function Page({ page, inert }) {
       style={page.chapter && { '--chapter': `var(--note-${page.chapter.note})` }}
       inert={inert}
     >
-      <Layout {...page} />
+      <Layout {...page} inert={inert} />
       {page.folio > 0 && <span className="folio">{page.folio}</span>}
     </article>
   )
