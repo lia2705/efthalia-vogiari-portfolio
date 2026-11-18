@@ -44,8 +44,8 @@ export const book = {
             { when: '2021-22', what: 'Working student SAP', where: 'CureVac', kind: 'work' },
             { when: '2022-23', what: 'Exchange semester', where: 'Metropolia, Helsinki', detail: 'Information Technology', kind: 'study' },
             { when: '2023-25', what: 'UX intern, then working student', where: 'Bosch Digital', kind: 'work', detail: 'UX design for digital products' },
-            { when: '2025', what: 'Bachelor’s thesis on AR', where: 'Bosch Digital', kind: 'study', detail: 'AR concepts, prototypes and user studies' },
-            { when: '2026', what: 'Master’s in HCI', where: 'University of Würzburg', kind: 'study', now: true },
+            { when: '2025', what: 'Bachelor’s thesis student', where: 'Bosch Digital', kind: 'study', detail: 'AR concepts, prototypes and user studies' },
+            { when: '2026', what: 'Master’s in Human-Computer-Interaction', where: 'University of Würzburg', kind: 'study', now: true },
             { when: '2026', what: 'Working student Accessibility & UX', where: 'BearingPoint', detail: 'Making digital products accessible', kind: 'work', now: true },
           ],
         },
@@ -147,9 +147,9 @@ export const book = {
           type: 'process',
           spaced: true,
           steps: [
-            ['The Challenge', 'AR can support maintenance workers with contextual information, but poorly positioned overlays can obstruct the real environment, increase cognitive load and create safety risks. We investigated how information placement affects usability and safety.'],
-            ['Design Process', 'Following a Human-Centered Design approach, we interviewed maintenance workers to understand their workflows and needs. Based on these insights, we derived user requirements and developed AR concepts focusing on spatial placement, anchoring and notifications.'],
-            ['Evaluation & Findings', 'We compared two interface concepts in a user study, evaluating user experience (UEQ), mental workload (NASA-TLX) and reaction times. Central, head-anchored displays improved visibility and reaction times but risked obstructing the environment. Central placement worked best for urgent alerts, while less urgent information benefited from peripheral positioning or subtle visual cues.'],
+            ['The Challenge', 'AR can support maintenance workers with contextual information, but poorly positioned overlays can obstruct the real environment, increase cognitive load and create safety risks. I investigated how information placement affects usability and safety.'],
+            ['Design Process', 'Following a Human-Centered Design approach, I interviewed maintenance workers to understand their workflows and needs. Based on these insights, I derived user requirements and developed AR concepts focusing on spatial placement, anchoring and notifications.'],
+            ['Evaluation & Findings', 'I compared two interface concepts in a user study, evaluating user experience (UEQ), mental workload (NASA-TLX) and reaction times. Central, head-anchored displays improved visibility and reaction times but risked obstructing the environment. Central placement worked best for urgent alerts, while less urgent information benefited from peripheral positioning or subtle visual cues.'],
           ],
         },
         {
@@ -243,7 +243,6 @@ export const book = {
         {
           type: 'contact',
           title: 'Say hi!',
-          email: 'lia.vogiari@aol.de',
           links: [['LinkedIn', 'https://www.linkedin.com/in/efthalia-vogiari/']],
         },
       ],

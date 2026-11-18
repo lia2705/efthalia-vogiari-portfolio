@@ -206,10 +206,9 @@ const layouts = {
     </>
   ),
 
-  contact: ({ title, email, links }) => (
+  contact: ({ title, links }) => (
     <>
       <h2 className="title title--big">{title}</h2>
-      <a className="email" href={`mailto:${email}`}>{email}</a>
       <ul className="links">
         {links.map(([label, href]) => (
           <li key={label}><a href={href} target="_blank" rel="noreferrer">{label} ↗</a></li>

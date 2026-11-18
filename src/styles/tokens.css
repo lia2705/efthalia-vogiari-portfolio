@@ -116,7 +116,6 @@
   --dur-ui: 200ms;
   --dur-turn: 650ms;
   --turn-stagger: 45ms; /* delay between sheets during a chapter jump */
-  --dur-settle: 600ms; /* the email highlight when the contact page opens */
 
   /* Idle loops on the desk and the cover star. They always run, even under reduced motion. */
   --ease-loop: ease-in-out;

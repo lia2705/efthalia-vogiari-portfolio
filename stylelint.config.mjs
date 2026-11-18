@@ -9,7 +9,7 @@ const OWNERS = {
   'src/components/Book.css': ['book'],
   'src/components/Nav.css': ['nav'],
   'src/components/Desk.css': ['desk', 'props', 'coffee', 'pen', 'postit', 'clip', 'music', 'earphones', 'snack', 'cat'],
-  'src/components/Page.css': ['page', 'title', 'line', 'bullet', 'fact', 'process', 'group', 'label', 'photo', 'folio', 'timeline', 'chip', 'language', 'flag', 'email', 'link', 'cover-label', 'star', 'band'],
+  'src/components/Page.css': ['page', 'title', 'line', 'bullet', 'fact', 'process', 'group', 'label', 'photo', 'folio', 'timeline', 'chip', 'language', 'flag', 'link', 'cover-label', 'star', 'band'],
 }
 
 const entries = Object.entries(OWNERS).flatMap(([file, prefixes]) => prefixes.map((prefix) => ({ file, prefix })))

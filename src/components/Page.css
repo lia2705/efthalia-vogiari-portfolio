@@ -308,6 +308,7 @@
 
 .timeline__body { display: grid; grid-column: 3 / -1; }
 .timeline__body strong { color: var(--color-ink); font-weight: 700; }
+.timeline__where { font-size: 2.7cqi; }
 .timeline__detail { display: block; color: var(--color-ink); }
 .timeline__key {
   display: flex;
@@ -367,16 +368,6 @@
   translate: none;
   line-height: calc(var(--lh) * 2);
 }
-.email {
-  align-self: flex-start;
-  font: 700 5cqi / var(--lh) var(--font-hand);
-  color: var(--color-ink);
-  text-decoration: none;
-  background: linear-gradient(transparent 55%, color-mix(in oklab, var(--color-accent) 80%, transparent) 55%) 0 0 / 100% 100% no-repeat;
-}
-.email:hover { color: var(--color-cover); }
-.page[data-open] .email { animation: highlight var(--dur-settle) var(--ease-out) calc(var(--dur-settle) / 2) backwards; }
-@keyframes highlight { from { background-size: 0 100%; } }
 .links {
   display: flex;
   gap: 2.4cqi;
@@ -474,5 +465,4 @@
   box-shadow: 0.5cqi 0 0.9cqi var(--color-band-shadow), -0.2cqi 0 0.4cqi var(--color-band-shadow-soft);
 }
 
-[data-reduced-motion] .star,
-[data-reduced-motion] .email { animation: none; }
+[data-reduced-motion] .star { animation: none; }
